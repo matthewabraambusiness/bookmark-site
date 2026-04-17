@@ -19,7 +19,7 @@ html, body {
   -webkit-text-size-adjust: 100%;
 }
 
-/* INTRO FIXED (no longer blocks page) */
+/* INTRO */
 #intro {
   position: fixed;
   inset: 0;
@@ -30,20 +30,27 @@ html, body {
   flex-direction: column;
   z-index: 999;
   animation: fadeOut 1.5s ease 2.5s forwards;
-  pointer-events: none; /* IMPORTANT FIX */
+  pointer-events: none;
 }
 
-/* BIGGER INTRO TEXT */
 .logo {
-  font-size: 40px;   /* bigger */
+  font-size: 42px;
   color: gold;
   text-shadow: 0 0 25px gold;
 }
 
 .sub {
   color: lightgreen;
-  font-size: 18px;   /* bigger */
-  margin-top: 8px;
+  font-size: 18px;
+  margin-top: 10px;
+}
+
+/* FADE ANIMATION */
+@keyframes fadeOut {
+  to {
+    opacity: 0;
+    visibility: hidden;
+  }
 }
 
 /* MENU */
@@ -148,7 +155,7 @@ header {
   margin-top: 80px;
 }
 
-/* CENTER */
+/* CENTER CONTENT */
 .center {
   display: flex;
   justify-content: center;
@@ -210,15 +217,17 @@ button {
   <div></div>
 </div>
 
+<!-- HEADER -->
 <header>Matthew's Bookmarks</header>
 
+<!-- CENTER -->
 <div class="center">
   <button onclick="location.href='main.html'">Start Shopping</button>
 </div>
 
 <script>
 
-/* MENU TOGGLE */
+/* MENU */
 function toggleMenu() {
   document.getElementById("menu").classList.toggle("open");
   document.getElementById("menuBtn").classList.toggle("hidden");
@@ -229,17 +238,17 @@ function toggleDropdown() {
   document.getElementById("dropdown").classList.toggle("open");
 }
 
-/* FIXED OUTSIDE CLICK (MOBILE SAFE) */
+/* OUTSIDE CLICK CLOSE (FIXED FOR MOBILE) */
 document.addEventListener("click", function(event) {
   const menu = document.getElementById("menu");
-  const menuBtn = document.getElementById("menuBtn");
+  const btn = document.getElementById("menuBtn");
 
-  const clickedMenu = menu.contains(event.target);
-  const clickedBtn = menuBtn.contains(event.target);
+  const insideMenu = menu.contains(event.target);
+  const insideBtn = btn.contains(event.target);
 
-  if (!clickedMenu && !clickedBtn) {
+  if (!insideMenu && !insideBtn) {
     menu.classList.remove("open");
-    menuBtn.classList.remove("hidden");
+    btn.classList.remove("hidden");
   }
 });
 
