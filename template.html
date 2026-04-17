@@ -164,8 +164,9 @@ header {
 
 <div id="dropdown" class="dropdown">
 
+  <!-- ONLY CHANGE IS HERE -->
   <div class="dropdown-header" onclick="toggleDropdown()">
-    <span>Main Page</span>
+    <span onclick="event.stopPropagation(); location.href='main.html'">Main Page</span>
     <span class="arrow">▶</span>
   </div>
 
@@ -233,7 +234,6 @@ Add To Cart
 
 <script>
 
-/* FIXED MENU FUNCTION */
 function toggleMenu() {
   document.getElementById("menu").classList.toggle("open");
   document.getElementById("menuBtn").classList.toggle("hidden");
@@ -243,7 +243,6 @@ function toggleDropdown() {
   document.getElementById("dropdown").classList.toggle("open");
 }
 
-/* CLOSE MENU WHEN CLICKING OUTSIDE */
 document.addEventListener("click", function(event) {
   const menu = document.getElementById("menu");
   const btn = document.getElementById("menuBtn");
