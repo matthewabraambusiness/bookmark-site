@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Cart</title>
+<link rel="stylesheet" href="style.css">
+</head>
+
+<body onload="loadCart()">
+
+<div id="menu" class="menu">
+<a class="main-link" href="index.html">Home</a>
+<a class="main-link" href="main.html">Main Page</a>
+<a class="sub-link" href="cart.html">Cart</a>
+</div>
+
+<button onclick="toggleMenu()">☰</button>
+
+<header>Cart</header>
+
+<div class="container" id="cartList"></div>
+
+<div class="container">
+<button class="whatsapp" onclick="checkout()">
+Finish Purchase via WhatsApp
+</button>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>

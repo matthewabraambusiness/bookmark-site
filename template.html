@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Template</title>
+<link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<div id="menu" class="menu">
+<a class="main-link" href="index.html">Home</a>
+<a class="main-link" href="main.html">Main Page</a>
+<a class="sub-link" href="template.html">Templates</a>
+<a class="sub-link" href="gallery.html">Gallery</a>
+<a class="sub-link" href="custom.html">Custom</a>
+<a class="sub-link" href="reviews.html">Reviews</a>
+<a class="sub-link" href="cart.html">Cart</a>
+<a class="sub-link" href="about.html">About</a>
+</div>
+
+<button onclick="toggleMenu()">☰</button>
+
+<header>Template (30 EGP)</header>
+
+<div class="container">
+
+<div class="card flex">
+  <div>
+    <p>Front</p>
+    <img src="images/bookmark1.jpeg">
+  </div>
+  <div>
+    <p>Back</p>
+    <img src="images/bookmark2.jpeg">
+  </div>
+</div>
+
+<div class="card">
+<input id="a1" placeholder="Character">
+<input id="a2" placeholder="Quote">
+<input id="a3" placeholder="Show">
+<input id="a4" placeholder="Front Color">
+<input id="a5" placeholder="Back Name">
+<input id="a6" placeholder="Back Colors">
+
+<button onclick="
+if(validate([a1,a2,a3,a4,a5,a6])){
+addToCart(`Template:
+${a1.value}
+${a2.value}
+${a3.value}
+${a4.value}
+${a5.value}
+${a6.value}`)
+}">
+Add To Cart
+</button>
+
+</div>
+
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Reviews</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<header>Reviews</header>
+
+<div class="container">
+
+  <input id="name" placeholder="Your Name">
+
+  <select id="stars">
+    <option value="5">★★★★★</option>
+    <option value="4">★★★★</option>
+    <option value="3">★★★</option>
+    <option value="2">★★</option>
+    <option value="1">★</option>
+  </select>
+
+  <textarea id="text" placeholder="Write Review"></textarea>
+
+  <button onclick="addReview()">Post Review</button>
+
+  <div id="list"></div>
+
+</div>
+
+<script>
+
+/* ================= FIREBASE ================= */
+const DB_URL = "https://matthew-reviews-default-rtdb.firebaseio.com/reviews.json";
+const list = document.getElementById("list");
+
+/* ================= DEVICE ID ================= */
+let deviceId = localStorage.getItem("deviceId");
+if(!deviceId){
+  deviceId = crypto.randomUUID();
+  localStorage.setItem("deviceId", deviceId);
+}
+
+/* ================= LOAD ================= */
+async function loadReviews(){
+  try{
+    let res = await fetch(DB_URL);
+    let data = await res.json();
+
+    if(!Array.isArray(data)) data = [];
+
+    render(data);
+  }catch(e){
+    console.log(e);
+    render([]);
+  }
+}
+
+/* ================= ADD REVIEW ================= */
+async function addReview(){
+  const name = document.getElementById("name");
+  const text = document.getElementById("text");
+  const stars = document.getElementById("stars");
+
+  if(!name.value.trim() || !text.value.trim()){
+    alert("Please Enter All The Necessary Information");
+    return;
+  }
+
+  let res = await fetch(DB_URL);
+  let data = await res.json();
+
+  if(!Array.isArray(data)) data = [];
+
+  const newReview = {
+    id: crypto.randomUUID(),
+    deviceId: deviceId,
+    name: name.value,
+    stars: stars.value,
+    text: text.value,
+    likes: 0,
+    dislikes: 0,
+    replies: [],
+    createdAt: Date.now()
+  };
+
+  data.push(newReview);
+
+  const save = await fetch(DB_URL, {
+    method: "PUT",
+    headers: {"Content-Type": "application/json"},
+    body: JSON.stringify(data)
+  });
+
+  if(save.ok){
+    name.value = "";
+    text.value = "";
+    loadReviews();
+  } else {
+    alert("Failed to post review. Try again.");
+  }
+}
+
+/* ================= LIKE ================= */
+async function like(i){
+  let res = await fetch(DB_URL);
+  let data = await res.json();
+  if(!Array.isArray(data)) return;
+
+  data[i].likes++;
+
+  await fetch(DB_URL,{
+    method:"PUT",
+    headers:{"Content-Type":"application/json"},
+    body:JSON.stringify(data)
+  });
+
+  loadReviews();
+}
+
+/* ================= DISLIKE ================= */
+async function dislike(i){
+  let res = await fetch(DB_URL);
+  let data = await res.json();
+  if(!Array.isArray(data)) return;
+
+  data[i].dislikes++;
+
+  await fetch(DB_URL,{
+    method:"PUT",
+    headers:{"Content-Type":"application/json"},
+    body:JSON.stringify(data)
+  });
+
+  loadReviews();
+}
+
+/* ================= REPLY ================= */
+async function reply(i){
+  let input = document.getElementById("reply-" + i);
+  if(!input.value.trim()) return;
+
+  let res = await fetch(DB_URL);
+  let data = await res.json();
+  if(!Array.isArray(data)) return;
+
+  data[i].replies.push(input.value);
+
+  await fetch(DB_URL,{
+    method:"PUT",
+    headers:{"Content-Type":"application/json"},
+    body:JSON.stringify(data)
+  });
+
+  loadReviews();
+}
+
+/* ================= DELETE (DEVICE + 5 MIN RULE) ================= */
+async function deleteReview(i){
+  let res = await fetch(DB_URL);
+  let data = await res.json();
+
+  if(!Array.isArray(data)) return;
+
+  const review = data[i];
+
+  // must be same device
+  if(review.deviceId !== deviceId){
+    alert("You can only delete your own review");
+    return;
+  }
+
+  // 5 minute rule
+  const now = Date.now();
+  if(now - review.createdAt > 5 * 60 * 1000){
+    alert("Delete time expired (5 minutes passed)");
+    return;
+  }
+
+  data.splice(i,1);
+
+  await fetch(DB_URL,{
+    method:"PUT",
+    headers:{"Content-Type":"application/json"},
+    body:JSON.stringify(data)
+  });
+
+  loadReviews();
+}
+
+/* ================= RENDER ================= */
+function render(reviews){
+  list.innerHTML = "";
+
+  reviews.forEach((r,i)=>{
+
+    const canDelete =
+      r.deviceId === deviceId &&
+      (Date.now() - r.createdAt < 5 * 60 * 1000);
+
+    let repliesHTML = "";
+
+    if(r.replies){
+      r.replies.forEach(rep=>{
+        repliesHTML += `<p style="margin-left:20px; opacity:0.7;">↳ ${rep}</p>`;
+      });
+    }
+
+    let div = document.createElement("div");
+    div.className = "card";
+
+    div.innerHTML = `
+      <b>${r.name}</b> ⭐${r.stars}
+      <p>${r.text}</p>
+
+      <button onclick="like(${i})">👍 ${r.likes}</button>
+      <button onclick="dislike(${i})">👎 ${r.dislikes}</button>
+
+      ${canDelete ? `<button onclick="deleteReview(${i})">🗑 Delete</button>` : ""}
+
+      <br><br>
+
+      <input id="reply-${i}" placeholder="Reply...">
+      <button onclick="reply(${i})">Reply</button>
+
+      ${repliesHTML}
+    `;
+
+    list.appendChild(div);
+  });
+}
+
+/* START */
+loadReviews();
+
+</script>
+
+</body>
+</html>

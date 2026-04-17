@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Custom</title>
+<link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<div id="menu" class="menu">
+<a class="main-link" href="index.html">Home</a>
+<a class="main-link" href="main.html">Main Page</a>
+<a class="sub-link" href="template.html">Templates</a>
+<a class="sub-link" href="gallery.html">Gallery</a>
+<a class="sub-link" href="custom.html">Custom</a>
+<a class="sub-link" href="reviews.html">Reviews</a>
+<a class="sub-link" href="cart.html">Cart</a>
+<a class="sub-link" href="about.html">About</a>
+</div>
+
+<button onclick="toggleMenu()">☰</button>
+
+<header>Custom (30 EGP)</header>
+
+<div class="container">
+
+<div class="card flex">
+<img src="images/bookmark8.jpeg">
+<img src="images/bookmark8.jpeg">
+</div>
+
+<div class="card">
+<textarea id="c1" placeholder="Please Write Every Desired Feature In Detail"></textarea>
+
+<button onclick="
+if(validate([c1])){
+addToCart(`Custom:
+${c1.value}`)
+}">
+Add To Cart
+</button>
+
+</div>
+
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>

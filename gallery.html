@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Gallery</title>
+<link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<div id="menu" class="menu">
+<a class="main-link" href="index.html">Home</a>
+<a class="main-link" href="main.html">Main Page</a>
+<a class="sub-link" href="template.html">Templates</a>
+<a class="sub-link" href="gallery.html">Gallery</a>
+<a class="sub-link" href="custom.html">Custom</a>
+<a class="sub-link" href="reviews.html">Reviews</a>
+<a class="sub-link" href="cart.html">Cart</a>
+<a class="sub-link" href="about.html">About</a>
+</div>
+
+<button onclick="toggleMenu()">☰</button>
+
+<header>Gallery (30 EGP)</header>
+
+<div class="container">
+
+<div class="card flex">
+<img src="images/bookmark3.jpeg">
+<img src="images/bookmark4.jpeg">
+<img src="images/bookmark5.jpeg">
+<img src="images/bookmark6.jpeg">
+<img src="images/bookmark7.jpeg">
+</div>
+
+<div class="card">
+<input id="g1" placeholder="Bookmark Name">
+<input id="g2" placeholder="Front Color">
+<input id="g3" placeholder="Back Name">
+<input id="g4" placeholder="Back Gradient">
+
+<button onclick="
+if(validate([g1,g2,g3,g4])){
+addToCart(`Gallery:
+${g1.value}
+${g2.value}
+${g3.value}
+${g4.value}`)
+}">
+Add To Cart
+</button>
+
+</div>
+
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
