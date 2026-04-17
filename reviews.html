@@ -63,6 +63,7 @@ button {
   font-size: 16px;
 }
 
+/* CARD */
 .card {
   width: 90%;
   max-width: 600px;
@@ -71,6 +72,24 @@ button {
   border: 1px solid gold;
   border-radius: 10px;
   padding: 15px;
+  box-sizing: border-box;
+}
+
+/* FIX: reply system layout (THIS IS THE IMPORTANT FIX) */
+.reply-box {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.reply-box input {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.reply-box button {
+  width: 100%;
 }
 
 /* MENU */
@@ -321,7 +340,7 @@ async function reply(i){
   loadReviews();
 }
 
-/* DELETE + 5 MIN RULE */
+/* DELETE */
 async function deleteReview(i){
   let data = await (await fetch(DB_URL)).json();
   const r = data[i];
@@ -342,7 +361,7 @@ async function deleteReview(i){
   loadReviews();
 }
 
-/* RENDER (FULL RESTORED) */
+/* RENDER FIXED */
 function render(reviews){
   list.innerHTML = "";
 
@@ -364,10 +383,10 @@ function render(reviews){
       <button onclick="dislike(${i})">👎 ${r.dislikes}</button>
       <button onclick="deleteReview(${i})">🗑 Delete</button>
 
-      <br><br>
-
-      <input id="reply-${i}" placeholder="Reply...">
-      <button onclick="reply(${i})">Reply</button>
+      <div class="reply-box">
+        <input id="reply-${i}" placeholder="Reply...">
+        <button onclick="reply(${i})">Reply</button>
+      </div>
 
       ${replies}
     `;
