@@ -106,11 +106,11 @@ button {
   font-weight: bold;
 }
 
-/* DROPDOWN */
+/* DROPDOWN FIXED POSITION */
 .dropdown-header {
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  gap: 6px;          /* 👈 THIS brings arrow next to text */
   color: gold;
   font-weight: bold;
   cursor: pointer;
@@ -121,7 +121,7 @@ button {
   transition: transform 0.3s ease;
 }
 
-/* FIX: only ONE arrow system */
+/* rotation stays same */
 .dropdown.open .arrow {
   transform: rotate(90deg);
 }
@@ -185,7 +185,6 @@ button {
 
   <div id="dropdown" class="dropdown">
 
-    <!-- FIXED: ONLY ONE ARROW -->
     <div class="dropdown-header" onclick="toggleDropdown()">
       <span>Main Page</span>
       <span class="arrow">▶</span>
@@ -216,7 +215,6 @@ button {
 <div class="form-box">
 
   <input id="name" placeholder="Your Name">
-
   <select id="stars">
     <option value="5">★★★★★</option>
     <option value="4">★★★★</option>
@@ -224,7 +222,6 @@ button {
     <option value="2">★★</option>
     <option value="1">★</option>
   </select>
-
   <textarea id="text" placeholder="Write Review"></textarea>
 
   <button onclick="addReview()">Post Review</button>
@@ -235,13 +232,11 @@ button {
 
 <script>
 
-/* MENU */
 function toggleMenu() {
   document.getElementById("menu").classList.toggle("open");
   document.getElementById("menuBtn").classList.toggle("hidden");
 }
 
-/* OUTSIDE CLICK CLOSE */
 document.addEventListener("click", function(event) {
   const menu = document.getElementById("menu");
   const btn = document.getElementById("menuBtn");
@@ -252,12 +247,11 @@ document.addEventListener("click", function(event) {
   }
 });
 
-/* DROPDOWN */
 function toggleDropdown() {
   document.getElementById("dropdown").classList.toggle("open");
 }
 
-/* ================= FIREBASE (UNCHANGED) ================= */
+/* Firebase unchanged */
 const DB_URL = "https://matthew-reviews-default-rtdb.firebaseio.com/reviews.json";
 const list = document.getElementById("list");
 
