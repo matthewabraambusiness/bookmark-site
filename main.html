@@ -7,7 +7,6 @@
 
 <style>
 
-/* GLOBAL FIX */
 html, body {
   margin: 0;
   padding: 0;
@@ -62,7 +61,7 @@ html, body {
 /* HEADER */
 header {
   text-align: center;
-  font-size: 28px;
+  font-size: 20px;
   color: gold;
   text-shadow: 0 0 15px gold;
   margin-top: 20px;
@@ -78,15 +77,15 @@ header {
 }
 
 .card {
-  width: 85%;
-  padding: 20px;
+  width: 90%;
+  padding: 14px;
   border: 1px solid gold;
   border-radius: 10px;
   margin-bottom: 20px;
   text-align: center;
 }
 
-/* GREEN GRID LINKS */
+/* GRID LINKS */
 .link-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -97,7 +96,7 @@ header {
 .link-grid a {
   color: lightgreen;
   text-decoration: none;
-  font-size: 16px;
+  font-size: 15px;
   padding: 8px;
   border-radius: 6px;
   border: 1px solid rgba(144,255,144,0.2);
@@ -143,21 +142,20 @@ button {
   pointer-events: none;
 }
 
-/* 🔥 SMALL MOBILE SHRINK (THIS IS THE CHANGE) */
-@media (max-width: 768px) {
+/* CLICK OUTSIDE LAYER */
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: transparent;
+  z-index: 900;
+  display: none;
+}
 
-  header {
-    font-size: 20px; /* was 22px */
-  }
-
-  .card {
-    width: 90%; /* slightly tighter */
-    padding: 14px; /* slightly smaller */
-  }
-
-  .link-grid a {
-    font-size: 15px; /* tiny shrink */
-  }
+.overlay.show {
+  display: block;
 }
 
 </style>
@@ -165,6 +163,10 @@ button {
 
 <body>
 
+<!-- OVERLAY (for click outside) -->
+<div id="overlay" class="overlay" onclick="closeMenu()"></div>
+
+<!-- MENU -->
 <div id="menu" class="menu">
 <a class="main-link" href="index.html">Home</a>
 <a class="main-link" href="main.html">Main Page ▼</a>
@@ -179,6 +181,7 @@ button {
 <a class="sub2-link" href="custom.html">Custom</a>
 </div>
 
+<!-- MENU BUTTON -->
 <div id="menuBtn" class="menu-btn" onclick="toggleMenu()">
   <div></div>
   <div></div>
@@ -213,6 +216,13 @@ Premium handmade bookmarks • custom designs • creative art pieces
 function toggleMenu() {
   document.getElementById("menu").classList.toggle("open");
   document.getElementById("menuBtn").classList.toggle("hidden");
+  document.getElementById("overlay").classList.toggle("show");
+}
+
+function closeMenu() {
+  document.getElementById("menu").classList.remove("open");
+  document.getElementById("menuBtn").classList.remove("hidden");
+  document.getElementById("overlay").classList.remove("show");
 }
 </script>
 
