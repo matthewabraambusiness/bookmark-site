@@ -63,7 +63,7 @@ button {
   font-size: 16px;
 }
 
-/* CARD */
+/* CARD + POP EFFECT FIXED */
 .card {
   width: 90%;
   max-width: 600px;
@@ -74,8 +74,7 @@ button {
   padding: 15px;
   box-sizing: border-box;
 
-  /* FIX POP UP EFFECT */
-  transition: 0.25s ease;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
 }
 
 .card:hover {
@@ -83,7 +82,7 @@ button {
   box-shadow: 0 10px 25px rgba(255, 215, 0, 0.25);
 }
 
-/* reply system */
+/* reply fix */
 .reply-box {
   display: flex;
   flex-direction: column;
@@ -91,13 +90,10 @@ button {
   margin-top: 10px;
 }
 
-.reply-box input {
-  width: 100%;
-  box-sizing: border-box;
-}
-
+.reply-box input,
 .reply-box button {
   width: 100%;
+  box-sizing: border-box;
 }
 
 /* MENU */
@@ -129,24 +125,24 @@ button {
   font-weight: bold;
 }
 
-/* clickable header (FIXED MAIN PAGE ISSUE) */
+/* FIXED MENU HEADER */
 .dropdown-header {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-start;
+  gap: 8px;
   color: gold;
   font-weight: bold;
   cursor: pointer;
   margin: 10px 0;
 }
 
-/* make "Main Page" clickable */
 .dropdown-header a {
   color: gold;
   text-decoration: none;
 }
 
-/* arrow */
+/* arrow close to text */
 .arrow {
   transition: transform 0.3s ease;
 }
@@ -207,21 +203,18 @@ button {
 
 <header>Reviews</header>
 
-<!-- MENU -->
 <div id="menu" class="menu">
 
   <a class="main-link" href="index.html">Home</a>
 
   <div id="dropdown" class="dropdown">
 
-    <!-- FIXED: MAIN PAGE IS NOW CLICKABLE -->
     <div class="dropdown-header" onclick="toggleDropdown()">
       <a href="main.html">Main Page</a>
       <span class="arrow">▶</span>
     </div>
 
     <div class="dropdown-content">
-      <!-- removed duplicate Main Page -->
       <a class="sub-link" href="template.html">Templates</a>
       <a class="sub-link" href="gallery.html">Gallery</a>
       <a class="sub-link" href="custom.html">Custom</a>
@@ -255,7 +248,6 @@ button {
 
 <script>
 
-/* MENU */
 function toggleMenu() {
   document.getElementById("menu").classList.toggle("open");
   document.getElementById("menuBtn").classList.toggle("hidden");
@@ -275,7 +267,7 @@ function toggleDropdown() {
   document.getElementById("dropdown").classList.toggle("open");
 }
 
-/* FIREBASE (UNCHANGED) */
+/* FIREBASE */
 const DB_URL = "https://matthew-reviews-default-rtdb.firebaseio.com/reviews.json";
 const list = document.getElementById("list");
 
@@ -285,6 +277,7 @@ if(!deviceId){
   localStorage.setItem("deviceId", deviceId);
 }
 
+/* LOAD */
 async function loadReviews(){
   let res = await fetch(DB_URL);
   let data = await res.json();
@@ -292,6 +285,7 @@ async function loadReviews(){
   render(data);
 }
 
+/* ADD */
 async function addReview(){
   const name = document.getElementById("name");
   const text = document.getElementById("text");
@@ -328,7 +322,7 @@ async function addReview(){
   loadReviews();
 }
 
-/* REST SAME */
+/* REST */
 function render(reviews){
   list.innerHTML = "";
 
