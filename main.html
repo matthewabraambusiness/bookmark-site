@@ -48,32 +48,22 @@ html, body {
   font-weight: bold;
 }
 
-.sub-link {
-  color: lightgreen;
-  margin-left: 10px;
-}
-
-.sub2-link {
-  color: #9eff9e;
-  margin-left: 20px;
-}
-
-/* DROPDOWN SECTION */
-.dropdown-btn {
+/* DROPDOWN SYSTEM */
+.dropdown-header {
   display: flex;
-  align-items: center;
   justify-content: space-between;
+  align-items: center;
   color: gold;
   font-weight: bold;
   cursor: pointer;
   margin: 10px 0;
 }
 
-.dropdown-arrow {
+.arrow {
   transition: transform 0.3s ease;
 }
 
-.dropdown.open .dropdown-arrow {
+.dropdown.open .arrow {
   transform: rotate(90deg);
 }
 
@@ -83,6 +73,18 @@ html, body {
 }
 
 .dropdown.open .dropdown-content {
+  display: block;
+}
+
+.sub-link {
+  color: lightgreen;
+  margin: 8px 0;
+  display: block;
+}
+
+.sub2-link {
+  color: #9eff9e;
+  margin-left: 20px;
   display: block;
 }
 
@@ -182,9 +184,9 @@ button {
 <!-- DROPDOWN -->
 <div id="dropdown" class="dropdown">
 
-  <div class="dropdown-btn" onclick="toggleDropdown(event)">
-    <a href="main.html" style="color:gold; text-decoration:none;">Main Page</a>
-    <span class="dropdown-arrow">▶</span>
+  <div class="dropdown-header" onclick="toggleDropdown()">
+    <span>Main Page</span>
+    <span class="arrow">▶</span>
   </div>
 
   <div class="dropdown-content">
@@ -238,9 +240,7 @@ function toggleMenu() {
   document.getElementById("menuBtn").classList.toggle("hidden");
 }
 
-/* dropdown toggle */
-function toggleDropdown(e) {
-  e.preventDefault();
+function toggleDropdown() {
   document.getElementById("dropdown").classList.toggle("open");
 }
 
