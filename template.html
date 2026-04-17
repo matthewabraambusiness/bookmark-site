@@ -154,32 +154,41 @@ header {
 }
 
 /* ========================= */
-/* FINAL MOBILE FIX (ONLY ADD) */
+/* FIXED MOBILE SCALE (ONLY ADDITION) */
 /* ========================= */
 
 @media (max-width: 768px) {
 
+  html {
+    font-size: 22px; /* FIX: makes everything feel bigger */
+  }
+
+  body {
+    transform: scale(1.05); /* FIX: subtle full UI boost */
+    transform-origin: top center;
+  }
+
   header {
-    font-size: 32px;
+    font-size: 36px;
   }
 
   .card {
-    width: 95%;
-    padding: 22px;
+    width: 96%;
+    padding: 26px;
   }
 
   input {
-    font-size: 20px;
-    padding: 14px;
+    font-size: 22px;
+    padding: 16px;
   }
 
   button {
-    font-size: 20px;
-    padding: 14px 18px;
+    font-size: 22px;
+    padding: 16px 20px;
   }
 
   .menu a {
-    font-size: 20px;
+    font-size: 22px;
   }
 
 }
