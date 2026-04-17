@@ -18,55 +18,55 @@ html, body {
   -webkit-text-size-adjust: 100%;
 }
 
-/* HEADER */
+/* HEADER BIGGER */
 header {
   text-align: center;
-  font-size: 26px;
+  font-size: 32px;
   color: gold;
   text-shadow: 0 0 15px gold;
   margin-top: 80px;
 }
 
-/* LAYOUT FIX */
-.container {
+/* ================= INPUT BOX WRAPPER ================= */
+.form-box {
+  width: 90%;
+  max-width: 500px;
+  margin: 20px auto;
+  padding: 15px;
+  border: 2px solid gold;
+  border-radius: 12px;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  gap: 15px;
-  padding: 20px;
+  gap: 10px;
 }
 
-/* INPUTS */
+/* INPUTS BIGGER */
 input, textarea, select {
-  width: 90%;
-  max-width: 400px;
-  padding: 10px;
+  width: 100%;
+  padding: 12px;
   border-radius: 8px;
   border: none;
   outline: none;
+  font-size: 16px;
 }
 
-/* CARD */
-.card {
-  width: 90%;
-  max-width: 500px;
-  background: rgba(255,255,255,0.05);
-  border: 1px solid gold;
-  border-radius: 10px;
-  padding: 15px;
+/* TEXTAREA BIGGER */
+textarea {
+  min-height: 100px;
+  resize: none;
 }
 
 /* BUTTON */
 button {
   background: gold;
   border: none;
-  padding: 10px 15px;
+  padding: 12px 15px;
   border-radius: 8px;
   cursor: pointer;
-  margin: 5px 2px;
+  font-size: 16px;
 }
 
-/* ================= MENU (MATCH OTHER PAGES) ================= */
+/* ================= MENU ================= */
 
 .menu {
   position: fixed;
@@ -96,13 +96,41 @@ button {
   font-weight: bold;
 }
 
+/* DROPDOWN ARROW (FIXED BACK) */
+.dropdown-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: gold;
+  font-weight: bold;
+  cursor: pointer;
+  margin: 10px 0;
+}
+
+.arrow {
+  transition: transform 0.3s ease;
+}
+
+.dropdown.open .arrow {
+  transform: rotate(90deg);
+}
+
+.dropdown-content {
+  display: none;
+  margin-left: 10px;
+}
+
+.dropdown.open .dropdown-content {
+  display: block;
+}
+
 .sub-link {
   color: lightgreen;
   display: block;
   margin: 8px 0;
 }
 
-/* MENU BUTTON (SAME STYLE AS MAIN + INDEX) */
+/* MENU BUTTON */
 .menu-btn {
   position: fixed;
   top: 15px;
@@ -132,6 +160,18 @@ button {
   pointer-events: none;
 }
 
+/* REVIEWS BIGGER */
+.card {
+  width: 90%;
+  max-width: 600px;
+  margin: 15px auto;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid gold;
+  border-radius: 10px;
+  padding: 15px;
+  font-size: 16px;
+}
+
   </style>
 </head>
 
@@ -141,15 +181,28 @@ button {
 
 <!-- MENU -->
 <div id="menu" class="menu">
-  <a class="main-link" href="index.html">Home</a>
-  <a class="main-link" href="main.html">Main Page</a>
 
-  <a class="sub-link" href="template.html">Templates</a>
-  <a class="sub-link" href="gallery.html">Gallery</a>
-  <a class="sub-link" href="custom.html">Custom</a>
-  <a class="sub-link" href="reviews.html">Reviews</a>
-  <a class="sub-link" href="cart.html">Cart</a>
-  <a class="sub-link" href="about.html">About</a>
+  <a class="main-link" href="index.html">Home</a>
+
+  <div id="dropdown" class="dropdown">
+
+    <div class="dropdown-header" onclick="toggleDropdown()">
+      <span>Main Page ▼</span>
+      <span class="arrow">▶</span>
+    </div>
+
+    <div class="dropdown-content">
+      <a class="sub-link" href="main.html">Main Page</a>
+      <a class="sub-link" href="template.html">Templates</a>
+      <a class="sub-link" href="gallery.html">Gallery</a>
+      <a class="sub-link" href="custom.html">Custom</a>
+      <a class="sub-link" href="reviews.html">Reviews</a>
+      <a class="sub-link" href="cart.html">Cart</a>
+      <a class="sub-link" href="about.html">About</a>
+    </div>
+
+  </div>
+
 </div>
 
 <!-- MENU BUTTON -->
@@ -159,7 +212,8 @@ button {
   <div></div>
 </div>
 
-<div class="container">
+<!-- INPUT BOX (GOLD OUTLINE WRAPPER) -->
+<div class="form-box">
 
   <input id="name" placeholder="Your Name">
 
@@ -175,19 +229,19 @@ button {
 
   <button onclick="addReview()">Post Review</button>
 
-  <div id="list"></div>
-
 </div>
+
+<div id="list"></div>
 
 <script>
 
-/* ================= MENU ================= */
+/* MENU */
 function toggleMenu() {
   document.getElementById("menu").classList.toggle("open");
   document.getElementById("menuBtn").classList.toggle("hidden");
 }
 
-/* CLOSE ON OUTSIDE CLICK */
+/* OUTSIDE CLICK CLOSE */
 document.addEventListener("click", function(event) {
   const menu = document.getElementById("menu");
   const btn = document.getElementById("menuBtn");
@@ -198,7 +252,12 @@ document.addEventListener("click", function(event) {
   }
 });
 
-/* ================= FIREBASE ================= */
+/* DROPDOWN */
+function toggleDropdown() {
+  document.getElementById("dropdown").classList.toggle("open");
+}
+
+/* ================= FIREBASE (UNCHANGED) ================= */
 const DB_URL = "https://matthew-reviews-default-rtdb.firebaseio.com/reviews.json";
 const list = document.getElementById("list");
 
@@ -208,24 +267,22 @@ if(!deviceId){
   localStorage.setItem("deviceId", deviceId);
 }
 
+/* LOAD */
 async function loadReviews(){
-  try{
-    let res = await fetch(DB_URL);
-    let data = await res.json();
-    if(!Array.isArray(data)) data = [];
-    render(data);
-  }catch(e){
-    render([]);
-  }
+  let res = await fetch(DB_URL);
+  let data = await res.json();
+  if(!Array.isArray(data)) data = [];
+  render(data);
 }
 
+/* ADD */
 async function addReview(){
   const name = document.getElementById("name");
   const text = document.getElementById("text");
   const stars = document.getElementById("stars");
 
   if(!name.value.trim() || !text.value.trim()){
-    alert("Please Enter All The Necessary Information");
+    alert("Please fill all fields");
     return;
   }
 
@@ -233,7 +290,7 @@ async function addReview(){
   let data = await res.json();
   if(!Array.isArray(data)) data = [];
 
-  const newReview = {
+  data.push({
     id: crypto.randomUUID(),
     deviceId,
     name: name.value,
@@ -243,9 +300,7 @@ async function addReview(){
     dislikes: 0,
     replies: [],
     createdAt: Date.now()
-  };
-
-  data.push(newReview);
+  });
 
   await fetch(DB_URL,{
     method:"PUT",
@@ -258,11 +313,9 @@ async function addReview(){
   loadReviews();
 }
 
-/* LIKE / DISLIKE / REPLY / DELETE (UNCHANGED) */
-
+/* LIKE / DISLIKE / REPLY / DELETE */
 async function like(i){
-  let res = await fetch(DB_URL);
-  let data = await res.json();
+  let data = await (await fetch(DB_URL)).json();
   if(!Array.isArray(data)) return;
   data[i].likes++;
   await fetch(DB_URL,{method:"PUT",headers:{"Content-Type":"application/json"},body:JSON.stringify(data)});
@@ -270,8 +323,7 @@ async function like(i){
 }
 
 async function dislike(i){
-  let res = await fetch(DB_URL);
-  let data = await res.json();
+  let data = await (await fetch(DB_URL)).json();
   if(!Array.isArray(data)) return;
   data[i].dislikes++;
   await fetch(DB_URL,{method:"PUT",headers:{"Content-Type":"application/json"},body:JSON.stringify(data)});
@@ -282,60 +334,47 @@ async function reply(i){
   let input = document.getElementById("reply-" + i);
   if(!input.value.trim()) return;
 
-  let res = await fetch(DB_URL);
-  let data = await res.json();
+  let data = await (await fetch(DB_URL)).json();
   if(!Array.isArray(data)) return;
 
   data[i].replies.push(input.value);
 
-  await fetch(DB_URL,{
-    method:"PUT",
-    headers:{"Content-Type":"application/json"},
-    body:JSON.stringify(data)
-  });
-
+  await fetch(DB_URL,{method:"PUT",headers:{"Content-Type":"application/json"},body:JSON.stringify(data)});
   loadReviews();
 }
 
 async function deleteReview(i){
-  let res = await fetch(DB_URL);
-  let data = await res.json();
+  let data = await (await fetch(DB_URL)).json();
   if(!Array.isArray(data)) return;
 
-  const review = data[i];
+  const r = data[i];
 
-  if(review.deviceId !== deviceId){
-    alert("You can only delete your own review");
+  if(r.deviceId !== deviceId){
+    alert("Not yours");
     return;
   }
 
-  if(Date.now() - review.createdAt > 5 * 60 * 1000){
-    alert("Delete time expired");
+  if(Date.now() - r.createdAt > 5*60*1000){
+    alert("Too late");
     return;
   }
 
   data.splice(i,1);
 
-  await fetch(DB_URL,{
-    method:"PUT",
-    headers:{"Content-Type":"application/json"},
-    body:JSON.stringify(data)
-  });
-
+  await fetch(DB_URL,{method:"PUT",headers:{"Content-Type":"application/json"},body:JSON.stringify(data)});
   loadReviews();
 }
 
+/* RENDER */
 function render(reviews){
   list.innerHTML = "";
 
   reviews.forEach((r,i)=>{
 
-    let repliesHTML = "";
-    if(r.replies){
-      r.replies.forEach(rep=>{
-        repliesHTML += `<p style="margin-left:20px; opacity:0.7;">↳ ${rep}</p>`;
-      });
-    }
+    let replies = "";
+    r.replies?.forEach(rep=>{
+      replies += `<p style="margin-left:15px; opacity:0.7;">↳ ${rep}</p>`;
+    });
 
     let div = document.createElement("div");
     div.className = "card";
@@ -352,7 +391,7 @@ function render(reviews){
       <input id="reply-${i}" placeholder="Reply...">
       <button onclick="reply(${i})">Reply</button>
 
-      ${repliesHTML}
+      ${replies}
     `;
 
     list.appendChild(div);
