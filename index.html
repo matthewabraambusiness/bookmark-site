@@ -3,7 +3,6 @@
 <head>
 <title>Matthew's Bookmarks</title>
 
-<!-- MOBILE FIX -->
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
@@ -31,14 +30,14 @@ body {
 }
 
 .logo {
-  font-size: 42px;
+  font-size: 26px;
   color: gold;
   text-shadow: 0 0 20px gold;
 }
 
 .sub {
   color: lightgreen;
-  font-size: 16px;
+  font-size: 14px;
 }
 
 /* MENU */
@@ -51,6 +50,7 @@ body {
   background: #111;
   padding: 20px;
   transition: 0.3s;
+  z-index: 1000;
 }
 
 .menu a {
@@ -85,7 +85,69 @@ button {
 /* HEADER */
 header {
   text-align: center;
-  font-size: 40px;
+  font-size: 24px;
   color: gold;
   text-shadow: 0 0 15px gold;
-  margin
+  margin-top: 20px;
+}
+
+/* CARD */
+.container {
+  display: flex;
+  justify-content: center;
+  margin-top: 50px;
+}
+
+.card {
+  padding: 20px;
+  border: 1px solid gold;
+  border-radius: 10px;
+}
+
+/* ANIMATION */
+@keyframes fadeOut {
+  to {
+    opacity: 0;
+    visibility: hidden;
+  }
+}
+
+</style>
+</head>
+
+<body>
+
+<div id="intro">
+  <div class="logo">Matthew's Bookmarks</div>
+  <div class="sub">Premium Handmade Collection</div>
+</div>
+
+<div id="menu" class="menu">
+<a class="main-link" href="index.html">Home</a>
+<a class="main-link" href="main.html">Main Page</a>
+<a class="sub-link" href="template.html">Templates</a>
+<a class="sub-link" href="gallery.html">Gallery</a>
+<a class="sub-link" href="custom.html">Custom</a>
+<a class="sub-link" href="reviews.html">Reviews</a>
+<a class="sub-link" href="cart.html">Cart</a>
+<a class="sub-link" href="about.html">About</a>
+</div>
+
+<button onclick="toggleMenu()">☰</button>
+
+<header>Matthew's Bookmarks</header>
+
+<div class="container">
+<div class="card">
+<button onclick="location.href='main.html'">Start Shopping</button>
+</div>
+</div>
+
+<script>
+function toggleMenu() {
+  document.getElementById("menu").classList.toggle("open");
+}
+</script>
+
+</body>
+</html>
