@@ -58,6 +58,34 @@ html, body {
   margin-left: 20px;
 }
 
+/* DROPDOWN SECTION */
+.dropdown-btn {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: gold;
+  font-weight: bold;
+  cursor: pointer;
+  margin: 10px 0;
+}
+
+.dropdown-arrow {
+  transition: transform 0.3s ease;
+}
+
+.dropdown.open .dropdown-arrow {
+  transform: rotate(90deg);
+}
+
+.dropdown-content {
+  display: none;
+  margin-left: 10px;
+}
+
+.dropdown.open .dropdown-content {
+  display: block;
+}
+
 /* HEADER */
 header {
   text-align: center;
@@ -128,7 +156,6 @@ button {
   align-items: center;
   gap: 4px;
   cursor: pointer;
-  transition: opacity 0.2s ease;
 }
 
 .menu-btn div {
@@ -142,43 +169,35 @@ button {
   pointer-events: none;
 }
 
-/* CLICK OUTSIDE LAYER */
-.overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: transparent;
-  z-index: 900;
-  display: none;
-}
-
-.overlay.show {
-  display: block;
-}
-
 </style>
 </head>
 
 <body>
 
-<!-- OVERLAY (for click outside) -->
-<div id="overlay" class="overlay" onclick="closeMenu()"></div>
-
 <!-- MENU -->
 <div id="menu" class="menu">
+
 <a class="main-link" href="index.html">Home</a>
-<a class="main-link" href="main.html">Main Page ▼</a>
 
-<a class="sub-link" href="template.html">Bookmarks</a>
-<a class="sub-link" href="reviews.html">Reviews</a>
-<a class="sub-link" href="cart.html">Cart</a>
-<a class="sub-link" href="about.html">About</a>
+<!-- DROPDOWN -->
+<div id="dropdown" class="dropdown">
 
-<a class="sub2-link" href="template.html">Templates</a>
-<a class="sub2-link" href="gallery.html">Gallery</a>
-<a class="sub2-link" href="custom.html">Custom</a>
+  <div class="dropdown-btn" onclick="toggleDropdown(event)">
+    <a href="main.html" style="color:gold; text-decoration:none;">Main Page</a>
+    <span class="dropdown-arrow">▶</span>
+  </div>
+
+  <div class="dropdown-content">
+    <a class="sub-link" href="template.html">Templates</a>
+    <a class="sub-link" href="gallery.html">Gallery</a>
+    <a class="sub-link" href="custom.html">Custom</a>
+    <a class="sub-link" href="reviews.html">Reviews</a>
+    <a class="sub-link" href="cart.html">Cart</a>
+    <a class="sub-link" href="about.html">About</a>
+  </div>
+
+</div>
+
 </div>
 
 <!-- MENU BUTTON -->
@@ -213,17 +232,18 @@ Premium handmade bookmarks • custom designs • creative art pieces
 </div>
 
 <script>
+
 function toggleMenu() {
   document.getElementById("menu").classList.toggle("open");
   document.getElementById("menuBtn").classList.toggle("hidden");
-  document.getElementById("overlay").classList.toggle("show");
 }
 
-function closeMenu() {
-  document.getElementById("menu").classList.remove("open");
-  document.getElementById("menuBtn").classList.remove("hidden");
-  document.getElementById("overlay").classList.remove("show");
+/* dropdown toggle */
+function toggleDropdown(e) {
+  e.preventDefault();
+  document.getElementById("dropdown").classList.toggle("open");
 }
+
 </script>
 
 </body>
