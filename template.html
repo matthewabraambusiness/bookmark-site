@@ -23,10 +23,10 @@ html, body {
   position: fixed;
   left: 0;
   top: 0;
-  width: 220px;
+  width: 280px;
   height: 100%;
   background: #111;
-  padding: 20px;
+  padding: 30px;
   transform: translateX(-100%);
   transition: transform 0.3s ease;
   z-index: 1000;
@@ -38,9 +38,10 @@ html, body {
 
 .menu a {
   display: block;
-  margin: 10px 0;
+  margin: 14px 0;
   text-decoration: none;
   transition: 0.2s ease;
+  font-size: 18px;
 }
 
 /* HOVER POP + GLOW */
@@ -52,6 +53,7 @@ html, body {
 .main-link {
   color: gold;
   font-weight: bold;
+  font-size: 20px;
 }
 
 /* DROPDOWN */
@@ -59,16 +61,17 @@ html, body {
   display: flex;
   align-items: center;
   justify-content: flex-start;
-  gap: 6px;
+  gap: 8px;
   color: gold;
   font-weight: bold;
   cursor: pointer;
-  margin: 10px 0;
+  margin: 14px 0;
+  font-size: 18px;
 }
 
 .arrow {
   transition: transform 0.3s ease;
-  margin-left: 4px;
+  margin-left: 6px;
 }
 
 .dropdown.open .arrow {
@@ -77,7 +80,7 @@ html, body {
 
 .dropdown-content {
   display: none;
-  margin-left: 10px;
+  margin-left: 14px;
 }
 
 .dropdown.open .dropdown-content {
@@ -87,8 +90,9 @@ html, body {
 .sub-link {
   color: lightgreen;
   display: block;
-  margin: 8px 0;
+  margin: 10px 0;
   transition: 0.2s ease;
+  font-size: 17px;
 }
 
 .sub-link:hover {
@@ -99,10 +103,10 @@ html, body {
 /* HEADER */
 header {
   text-align: center;
-  font-size: 20px;
+  font-size: 28px;
   color: gold;
   text-shadow: 0 0 15px gold;
-  margin-top: 20px;
+  margin-top: 30px;
 }
 
 /* LAYOUT */
@@ -111,40 +115,67 @@ header {
   justify-content: center;
   flex-direction: column;
   align-items: center;
-  margin-top: 40px;
+  margin-top: 60px;
 }
 
 .card {
-  width: 90%;
-  padding: 14px;
-  border: 1px solid gold;
-  border-radius: 10px;
-  margin-bottom: 20px;
+  width: 92%;
+  padding: 20px;
+  border: 2px solid gold;
+  border-radius: 14px;
+  margin-bottom: 25px;
   text-align: center;
+}
+
+/* IMAGES */
+.card img {
+  width: 140px;
+  border-radius: 10px;
+}
+
+/* INPUTS */
+input {
+  width: 92%;
+  padding: 14px;
+  margin: 10px 0;
+  border-radius: 8px;
+  border: none;
+  font-size: 16px;
+}
+
+/* BUTTON */
+button {
+  background: gold;
+  border: none;
+  padding: 16px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 18px;
+  font-weight: bold;
 }
 
 /* MENU BUTTON */
 .menu-btn {
   position: fixed;
-  top: 15px;
-  left: 15px;
+  top: 18px;
+  left: 18px;
   z-index: 1100;
-  width: 45px;
-  height: 40px;
+  width: 55px;
+  height: 45px;
   background: #111;
   border: 2px solid gold;
-  border-radius: 8px;
+  border-radius: 10px;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  gap: 4px;
+  gap: 5px;
   cursor: pointer;
 }
 
 .menu-btn div {
-  width: 22px;
-  height: 2px;
+  width: 26px;
+  height: 3px;
   background: gold;
 }
 
@@ -164,7 +195,6 @@ header {
 
 <div id="dropdown" class="dropdown">
 
-  <!-- ONLY CHANGE IS HERE -->
   <div class="dropdown-header" onclick="toggleDropdown()">
     <span onclick="event.stopPropagation(); location.href='main.html'">Main Page</span>
     <span class="arrow">▶</span>
@@ -196,11 +226,11 @@ header {
 
 <div class="card flex">
   <div>
-    <p>Front</p>
+    <p style="font-size:18px;">Front</p>
     <img src="images/bookmark1.jpeg">
   </div>
   <div>
-    <p>Back</p>
+    <p style="font-size:18px;">Back</p>
     <img src="images/bookmark2.jpeg">
   </div>
 </div>
