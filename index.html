@@ -7,8 +7,19 @@
 
 <style>
 
-body {
+/* GLOBAL FIX (this removes grey line) */
+* {
   margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  width: 100%;
+  overflow-x: hidden;
+}
+
+body {
   font-family: Arial, sans-serif;
   background: radial-gradient(circle at top, #111, #000);
   color: white;
@@ -75,79 +86,4 @@ body {
 
 /* BUTTON */
 button {
-  background: gold;
-  border: none;
-  padding: 10px;
-  border-radius: 8px;
-  cursor: pointer;
-}
-
-/* HEADER */
-header {
-  text-align: center;
-  font-size: 24px;
-  color: gold;
-  text-shadow: 0 0 15px gold;
-  margin-top: 20px;
-}
-
-/* CARD */
-.container {
-  display: flex;
-  justify-content: center;
-  margin-top: 50px;
-}
-
-.card {
-  padding: 20px;
-  border: 1px solid gold;
-  border-radius: 10px;
-}
-
-/* ANIMATION */
-@keyframes fadeOut {
-  to {
-    opacity: 0;
-    visibility: hidden;
-  }
-}
-
-</style>
-</head>
-
-<body>
-
-<div id="intro">
-  <div class="logo">Matthew's Bookmarks</div>
-  <div class="sub">Premium Handmade Collection</div>
-</div>
-
-<div id="menu" class="menu">
-<a class="main-link" href="index.html">Home</a>
-<a class="main-link" href="main.html">Main Page</a>
-<a class="sub-link" href="template.html">Templates</a>
-<a class="sub-link" href="gallery.html">Gallery</a>
-<a class="sub-link" href="custom.html">Custom</a>
-<a class="sub-link" href="reviews.html">Reviews</a>
-<a class="sub-link" href="cart.html">Cart</a>
-<a class="sub-link" href="about.html">About</a>
-</div>
-
-<button onclick="toggleMenu()">☰</button>
-
-<header>Matthew's Bookmarks</header>
-
-<div class="container">
-<div class="card">
-<button onclick="location.href='main.html'">Start Shopping</button>
-</div>
-</div>
-
-<script>
-function toggleMenu() {
-  document.getElementById("menu").classList.toggle("open");
-}
-</script>
-
-</body>
-</html>
+  background
