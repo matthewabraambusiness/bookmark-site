@@ -7,7 +7,7 @@
 
 <style>
 
-/* GLOBAL EDGE FIX */
+/* GLOBAL FIX */
 html, body {
   margin: 0;
   padding: 0;
@@ -83,6 +83,24 @@ header {
   border: 1px solid gold;
   border-radius: 10px;
   margin-bottom: 20px;
+  text-align: center;
+}
+
+/* GREEN GRID LINKS */
+.link-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.link-grid a {
+  color: lightgreen;
+  text-decoration: none;
+  font-size: 16px;
+  padding: 8px;
+  border: 1px solid rgba(144,255,144,0.2);
+  border-radius: 6px;
 }
 
 /* BUTTON */
@@ -94,7 +112,7 @@ button {
   cursor: pointer;
 }
 
-/* 🔥 HAMBURGER BUTTON (FIXED + MORE VISIBLE) */
+/* HAMBURGER BUTTON */
 .menu-btn {
   position: fixed;
   top: 15px;
@@ -111,16 +129,22 @@ button {
   align-items: center;
   gap: 4px;
   cursor: pointer;
+  transition: opacity 0.2s ease;
 }
 
-/* 3 LINES */
 .menu-btn div {
   width: 22px;
   height: 2px;
   background: gold;
 }
 
-/* MOBILE FIX (REAL FIX) */
+/* HIDE BUTTON WHEN MENU OPEN */
+.menu-btn.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* MOBILE */
 @media (max-width: 768px) {
 
   header {
@@ -129,11 +153,6 @@ button {
 
   .card {
     width: 92%;
-    padding: 15px;
-  }
-
-  .menu {
-    width: 200px;
   }
 }
 
@@ -157,8 +176,8 @@ button {
 <a class="sub2-link" href="custom.html">Custom</a>
 </div>
 
-<!-- HAMBURGER BUTTON -->
-<div class="menu-btn" onclick="toggleMenu()">
+<!-- HAMBURGER -->
+<div id="menuBtn" class="menu-btn" onclick="toggleMenu()">
   <div></div>
   <div></div>
   <div></div>
@@ -170,15 +189,20 @@ button {
 
 <div class="card">
 <h2>Where A Piece Of Paper Turns Into Your Craziest Ideas</h2>
+<p style="color:lightgreen; font-size:20px; margin-top:10px;">
+Premium handmade bookmarks • custom designs • creative art pieces
+</p>
 </div>
 
 <div class="card">
-<p><a class="sub-link" href="template.html">Templates</a></p>
-<p><a class="sub-link" href="gallery.html">Gallery</a></p>
-<p><a class="sub-link" href="custom.html">Custom</a></p>
-<p><a class="sub-link" href="reviews.html">Reviews</a></p>
-<p><a class="sub-link" href="cart.html">Cart</a></p>
-<p><a class="sub-link" href="about.html">About</a></p>
+<div class="link-grid">
+<a href="template.html">Templates</a>
+<a href="gallery.html">Gallery</a>
+<a href="custom.html">Custom</a>
+<a href="reviews.html">Reviews</a>
+<a href="cart.html">Cart</a>
+<a href="about.html">About</a>
+</div>
 </div>
 
 </div>
@@ -186,6 +210,9 @@ button {
 <script>
 function toggleMenu() {
   document.getElementById("menu").classList.toggle("open");
+
+  // hide/show button
+  document.getElementById("menuBtn").classList.toggle("hidden");
 }
 </script>
 
