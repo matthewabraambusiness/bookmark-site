@@ -99,8 +99,8 @@ header {
   text-decoration: none;
   font-size: 16px;
   padding: 8px;
-  border: 1px solid rgba(144,255,144,0.2);
   border-radius: 6px;
+  border: 1px solid rgba(144,255,144,0.2);
 }
 
 /* BUTTON */
@@ -112,7 +112,7 @@ button {
   cursor: pointer;
 }
 
-/* HAMBURGER BUTTON */
+/* MENU BUTTON */
 .menu-btn {
   position: fixed;
   top: 15px;
@@ -138,21 +138,25 @@ button {
   background: gold;
 }
 
-/* HIDE BUTTON WHEN MENU OPEN */
 .menu-btn.hidden {
   opacity: 0;
   pointer-events: none;
 }
 
-/* MOBILE */
+/* 🔥 SMALL MOBILE SHRINK (THIS IS THE CHANGE) */
 @media (max-width: 768px) {
 
   header {
-    font-size: 22px;
+    font-size: 20px; /* was 22px */
   }
 
   .card {
-    width: 92%;
+    width: 90%; /* slightly tighter */
+    padding: 14px; /* slightly smaller */
+  }
+
+  .link-grid a {
+    font-size: 15px; /* tiny shrink */
   }
 }
 
@@ -161,7 +165,6 @@ button {
 
 <body>
 
-<!-- MENU -->
 <div id="menu" class="menu">
 <a class="main-link" href="index.html">Home</a>
 <a class="main-link" href="main.html">Main Page ▼</a>
@@ -176,7 +179,6 @@ button {
 <a class="sub2-link" href="custom.html">Custom</a>
 </div>
 
-<!-- HAMBURGER -->
 <div id="menuBtn" class="menu-btn" onclick="toggleMenu()">
   <div></div>
   <div></div>
@@ -210,8 +212,6 @@ Premium handmade bookmarks • custom designs • creative art pieces
 <script>
 function toggleMenu() {
   document.getElementById("menu").classList.toggle("open");
-
-  // hide/show button
   document.getElementById("menuBtn").classList.toggle("hidden");
 }
 </script>
