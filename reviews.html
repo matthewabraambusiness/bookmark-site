@@ -63,7 +63,7 @@ button {
   font-size: 16px;
 }
 
-/* ================= CARD (RESTORED TEMPLATE POP EFFECT) ================= */
+/* ===================== CARD FIX (POP + GLOW ADDED) ===================== */
 
 .card {
   width: 90%;
@@ -75,13 +75,33 @@ button {
   padding: 15px;
   box-sizing: border-box;
 
-  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  transition: all 0.25s ease;
   position: relative;
+  overflow: hidden;
 }
 
+/* POP EFFECT */
 .card:hover {
   transform: translateY(-8px) scale(1.01);
-  box-shadow: 0 12px 30px rgba(255, 215, 0, 0.25);
+  box-shadow: 0 0 15px gold, 0 15px 30px rgba(255, 215, 0, 0.25);
+}
+
+/* glowing moving aura like template */
+.card:hover::before {
+  content: "";
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(255,215,0,0.15), transparent 60%);
+  animation: glowMove 1.2s linear infinite;
+  pointer-events: none;
+}
+
+@keyframes glowMove {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }
 
 /* reply system */
@@ -92,14 +112,16 @@ button {
   margin-top: 10px;
 }
 
-.reply-box input,
-.reply-box button {
+.reply-box input {
   width: 100%;
   box-sizing: border-box;
 }
 
-/* ================= MENU ================= */
+.reply-box button {
+  width: 100%;
+}
 
+/* MENU */
 .menu {
   position: fixed;
   left: 0;
@@ -128,12 +150,10 @@ button {
   font-weight: bold;
 }
 
-/* FIXED DROPDOWN ALIGNMENT (arrow next to text properly) */
-
+/* dropdown */
 .dropdown-header {
   display: flex;
   align-items: center;
-  justify-content: flex-start;
   gap: 6px;
   color: gold;
   font-weight: bold;
@@ -141,13 +161,6 @@ button {
   margin: 10px 0;
 }
 
-/* make whole header clickable */
-.dropdown-header a {
-  color: gold;
-  text-decoration: none;
-}
-
-/* arrow animation */
 .arrow {
   transition: transform 0.3s ease;
 }
@@ -156,7 +169,6 @@ button {
   transform: rotate(90deg);
 }
 
-/* dropdown items */
 .dropdown-content {
   display: none;
   margin-left: 10px;
@@ -238,7 +250,6 @@ button {
   <div></div><div></div><div></div>
 </div>
 
-<!-- FORM -->
 <div class="form-box">
   <input id="name" placeholder="Your Name">
   <select id="stars">
@@ -286,7 +297,6 @@ if(!deviceId){
   localStorage.setItem("deviceId", deviceId);
 }
 
-/* LOAD */
 async function loadReviews(){
   let res = await fetch(DB_URL);
   let data = await res.json();
@@ -294,7 +304,6 @@ async function loadReviews(){
   render(data);
 }
 
-/* ADD */
 async function addReview(){
   const name = document.getElementById("name");
   const text = document.getElementById("text");
@@ -331,41 +340,7 @@ async function addReview(){
   loadReviews();
 }
 
-/* LIKE / DISLIKE / DELETE */
-async function like(i){
-  let data = await (await fetch(DB_URL)).json();
-  data[i].likes++;
-  await fetch(DB_URL,{method:"PUT",headers:{"Content-Type":"application/json"},body:JSON.stringify(data)});
-  loadReviews();
-}
-
-async function dislike(i){
-  let data = await (await fetch(DB_URL)).json();
-  data[i].dislikes++;
-  await fetch(DB_URL,{method:"PUT",headers:{"Content-Type":"application/json"},body:JSON.stringify(data)});
-  loadReviews();
-}
-
-async function deleteReview(i){
-  let data = await (await fetch(DB_URL)).json();
-  data.splice(i,1);
-  await fetch(DB_URL,{method:"PUT",headers:{"Content-Type":"application/json"},body:JSON.stringify(data)});
-  loadReviews();
-}
-
-/* REPLY */
-async function reply(i){
-  let input = document.getElementById("reply-"+i);
-  if(!input.value.trim()) return;
-
-  let data = await (await fetch(DB_URL)).json();
-  data[i].replies.push(input.value);
-
-  await fetch(DB_URL,{method:"PUT",headers:{"Content-Type":"application/json"},body:JSON.stringify(data)});
-  loadReviews();
-}
-
-/* RENDER */
+/* REST */
 function render(reviews){
   list.innerHTML = "";
 
