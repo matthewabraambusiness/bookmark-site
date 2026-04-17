@@ -123,7 +123,7 @@ header {
   text-align: center;
 }
 
-/* MENU BUTTON (FIXED - same as other pages) */
+/* MENU BUTTON */
 .menu-btn {
   position: fixed;
   top: 15px;
@@ -182,7 +182,7 @@ header {
 
 </div>
 
-<!-- FIXED MENU BUTTON -->
+<!-- MENU BUTTON -->
 <div id="menuBtn" class="menu-btn" onclick="toggleMenu()">
   <div></div>
   <div></div>
@@ -206,11 +206,11 @@ header {
 
 <div class="card">
 <input id="a1" placeholder="Character">
-<input id="a2" placeholder="Quote">
-<input id="a3" placeholder="Show">
+<input id="a2" placeholder="A Quote or Random">
+<input id="a3" placeholder="Movie/Show/Book">
 <input id="a4" placeholder="Front Color">
-<input id="a5" placeholder="Back Name">
-<input id="a6" placeholder="Back Colors">
+<input id="a5" placeholder="Name On The Back">
+<input id="a6" placeholder="Back Color Gradient">
 
 <button onclick="
 if(validate([a1,a2,a3,a4,a5,a6])){
@@ -232,9 +232,28 @@ Add To Cart
 <script src="script.js"></script>
 
 <script>
+
+/* FIXED MENU FUNCTION */
+function toggleMenu() {
+  document.getElementById("menu").classList.toggle("open");
+  document.getElementById("menuBtn").classList.toggle("hidden");
+}
+
 function toggleDropdown() {
   document.getElementById("dropdown").classList.toggle("open");
 }
+
+/* CLOSE MENU WHEN CLICKING OUTSIDE */
+document.addEventListener("click", function(event) {
+  const menu = document.getElementById("menu");
+  const btn = document.getElementById("menuBtn");
+
+  if (!menu.contains(event.target) && !btn.contains(event.target)) {
+    menu.classList.remove("open");
+    btn.classList.remove("hidden");
+  }
+});
+
 </script>
 
 </body>
