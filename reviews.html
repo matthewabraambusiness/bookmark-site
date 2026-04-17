@@ -2,12 +2,162 @@
 <html>
 <head>
   <title>Reviews</title>
-  <link rel="stylesheet" href="style.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <style>
+
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  min-height: 100%;
+  overflow-x: hidden;
+  background: radial-gradient(circle at top, #111, #000);
+  font-family: Arial, sans-serif;
+  color: white;
+  -webkit-text-size-adjust: 100%;
+}
+
+/* HEADER */
+header {
+  text-align: center;
+  font-size: 26px;
+  color: gold;
+  text-shadow: 0 0 15px gold;
+  margin-top: 80px;
+}
+
+/* LAYOUT FIX */
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+  padding: 20px;
+}
+
+/* INPUTS */
+input, textarea, select {
+  width: 90%;
+  max-width: 400px;
+  padding: 10px;
+  border-radius: 8px;
+  border: none;
+  outline: none;
+}
+
+/* CARD */
+.card {
+  width: 90%;
+  max-width: 500px;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid gold;
+  border-radius: 10px;
+  padding: 15px;
+}
+
+/* BUTTON */
+button {
+  background: gold;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 8px;
+  cursor: pointer;
+  margin: 5px 2px;
+}
+
+/* ================= MENU (MATCH OTHER PAGES) ================= */
+
+.menu {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 220px;
+  height: 100%;
+  background: #111;
+  padding: 20px;
+  transform: translateX(-100%);
+  transition: transform 0.3s ease;
+  z-index: 1000;
+}
+
+.menu.open {
+  transform: translateX(0);
+}
+
+.menu a {
+  display: block;
+  margin: 10px 0;
+  text-decoration: none;
+}
+
+.main-link {
+  color: gold;
+  font-weight: bold;
+}
+
+.sub-link {
+  color: lightgreen;
+  display: block;
+  margin: 8px 0;
+}
+
+/* MENU BUTTON (SAME STYLE AS MAIN + INDEX) */
+.menu-btn {
+  position: fixed;
+  top: 15px;
+  left: 15px;
+  z-index: 1100;
+  width: 45px;
+  height: 40px;
+  background: #111;
+  border: 2px solid gold;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+}
+
+.menu-btn div {
+  width: 22px;
+  height: 2px;
+  background: gold;
+}
+
+.menu-btn.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+  </style>
 </head>
 
 <body>
 
 <header>Reviews</header>
+
+<!-- MENU -->
+<div id="menu" class="menu">
+  <a class="main-link" href="index.html">Home</a>
+  <a class="main-link" href="main.html">Main Page</a>
+
+  <a class="sub-link" href="template.html">Templates</a>
+  <a class="sub-link" href="gallery.html">Gallery</a>
+  <a class="sub-link" href="custom.html">Custom</a>
+  <a class="sub-link" href="reviews.html">Reviews</a>
+  <a class="sub-link" href="cart.html">Cart</a>
+  <a class="sub-link" href="about.html">About</a>
+</div>
+
+<!-- MENU BUTTON -->
+<div id="menuBtn" class="menu-btn" onclick="toggleMenu()">
+  <div></div>
+  <div></div>
+  <div></div>
+</div>
 
 <div class="container">
 
@@ -31,33 +181,44 @@
 
 <script>
 
+/* ================= MENU ================= */
+function toggleMenu() {
+  document.getElementById("menu").classList.toggle("open");
+  document.getElementById("menuBtn").classList.toggle("hidden");
+}
+
+/* CLOSE ON OUTSIDE CLICK */
+document.addEventListener("click", function(event) {
+  const menu = document.getElementById("menu");
+  const btn = document.getElementById("menuBtn");
+
+  if (!menu.contains(event.target) && !btn.contains(event.target)) {
+    menu.classList.remove("open");
+    btn.classList.remove("hidden");
+  }
+});
+
 /* ================= FIREBASE ================= */
 const DB_URL = "https://matthew-reviews-default-rtdb.firebaseio.com/reviews.json";
 const list = document.getElementById("list");
 
-/* ================= DEVICE ID ================= */
 let deviceId = localStorage.getItem("deviceId");
 if(!deviceId){
   deviceId = crypto.randomUUID();
   localStorage.setItem("deviceId", deviceId);
 }
 
-/* ================= LOAD ================= */
 async function loadReviews(){
   try{
     let res = await fetch(DB_URL);
     let data = await res.json();
-
     if(!Array.isArray(data)) data = [];
-
     render(data);
   }catch(e){
-    console.log(e);
     render([]);
   }
 }
 
-/* ================= ADD REVIEW ================= */
 async function addReview(){
   const name = document.getElementById("name");
   const text = document.getElementById("text");
@@ -70,12 +231,11 @@ async function addReview(){
 
   let res = await fetch(DB_URL);
   let data = await res.json();
-
   if(!Array.isArray(data)) data = [];
 
   const newReview = {
     id: crypto.randomUUID(),
-    deviceId: deviceId,
+    deviceId,
     name: name.value,
     stars: stars.value,
     text: text.value,
@@ -87,56 +247,37 @@ async function addReview(){
 
   data.push(newReview);
 
-  const save = await fetch(DB_URL, {
-    method: "PUT",
-    headers: {"Content-Type": "application/json"},
-    body: JSON.stringify(data)
+  await fetch(DB_URL,{
+    method:"PUT",
+    headers:{"Content-Type":"application/json"},
+    body:JSON.stringify(data)
   });
 
-  if(save.ok){
-    name.value = "";
-    text.value = "";
-    loadReviews();
-  } else {
-    alert("Failed to post review. Try again.");
-  }
+  name.value = "";
+  text.value = "";
+  loadReviews();
 }
 
-/* ================= LIKE ================= */
+/* LIKE / DISLIKE / REPLY / DELETE (UNCHANGED) */
+
 async function like(i){
   let res = await fetch(DB_URL);
   let data = await res.json();
   if(!Array.isArray(data)) return;
-
   data[i].likes++;
-
-  await fetch(DB_URL,{
-    method:"PUT",
-    headers:{"Content-Type":"application/json"},
-    body:JSON.stringify(data)
-  });
-
+  await fetch(DB_URL,{method:"PUT",headers:{"Content-Type":"application/json"},body:JSON.stringify(data)});
   loadReviews();
 }
 
-/* ================= DISLIKE ================= */
 async function dislike(i){
   let res = await fetch(DB_URL);
   let data = await res.json();
   if(!Array.isArray(data)) return;
-
   data[i].dislikes++;
-
-  await fetch(DB_URL,{
-    method:"PUT",
-    headers:{"Content-Type":"application/json"},
-    body:JSON.stringify(data)
-  });
-
+  await fetch(DB_URL,{method:"PUT",headers:{"Content-Type":"application/json"},body:JSON.stringify(data)});
   loadReviews();
 }
 
-/* ================= REPLY ================= */
 async function reply(i){
   let input = document.getElementById("reply-" + i);
   if(!input.value.trim()) return;
@@ -156,25 +297,20 @@ async function reply(i){
   loadReviews();
 }
 
-/* ================= DELETE (DEVICE + 5 MIN RULE) ================= */
 async function deleteReview(i){
   let res = await fetch(DB_URL);
   let data = await res.json();
-
   if(!Array.isArray(data)) return;
 
   const review = data[i];
 
-  // must be same device
   if(review.deviceId !== deviceId){
     alert("You can only delete your own review");
     return;
   }
 
-  // 5 minute rule
-  const now = Date.now();
-  if(now - review.createdAt > 5 * 60 * 1000){
-    alert("Delete time expired (5 minutes passed)");
+  if(Date.now() - review.createdAt > 5 * 60 * 1000){
+    alert("Delete time expired");
     return;
   }
 
@@ -189,18 +325,12 @@ async function deleteReview(i){
   loadReviews();
 }
 
-/* ================= RENDER ================= */
 function render(reviews){
   list.innerHTML = "";
 
   reviews.forEach((r,i)=>{
 
-    const canDelete =
-      r.deviceId === deviceId &&
-      (Date.now() - r.createdAt < 5 * 60 * 1000);
-
     let repliesHTML = "";
-
     if(r.replies){
       r.replies.forEach(rep=>{
         repliesHTML += `<p style="margin-left:20px; opacity:0.7;">↳ ${rep}</p>`;
@@ -217,8 +347,6 @@ function render(reviews){
       <button onclick="like(${i})">👍 ${r.likes}</button>
       <button onclick="dislike(${i})">👎 ${r.dislikes}</button>
 
-      ${canDelete ? `<button onclick="deleteReview(${i})">🗑 Delete</button>` : ""}
-
       <br><br>
 
       <input id="reply-${i}" placeholder="Reply...">
@@ -231,7 +359,6 @@ function render(reviews){
   });
 }
 
-/* START */
 loadReviews();
 
 </script>
