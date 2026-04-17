@@ -3,22 +3,191 @@
 <head>
 <title>Template</title>
 <link rel="stylesheet" href="style.css">
+
+<style>
+
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  min-height: 100%;
+  overflow-x: hidden;
+  background: radial-gradient(circle at top, #111, #000);
+  font-family: Arial, sans-serif;
+  color: white;
+  -webkit-text-size-adjust: 100%;
+}
+
+/* MENU */
+.menu {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 220px;
+  height: 100%;
+  background: #111;
+  padding: 20px;
+  transform: translateX(-100%);
+  transition: transform 0.3s ease;
+  z-index: 1000;
+}
+
+.menu.open {
+  transform: translateX(0);
+}
+
+.menu a {
+  display: block;
+  margin: 10px 0;
+  text-decoration: none;
+  transition: 0.2s ease;
+}
+
+/* HOVER POP + GLOW */
+.menu a:hover {
+  transform: translateY(-4px);
+  text-shadow: 0 0 15px rgba(255,215,0,0.6);
+}
+
+.main-link {
+  color: gold;
+  font-weight: bold;
+}
+
+/* DROPDOWN */
+.dropdown-header {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 6px;
+  color: gold;
+  font-weight: bold;
+  cursor: pointer;
+  margin: 10px 0;
+}
+
+.arrow {
+  transition: transform 0.3s ease;
+  margin-left: 4px;
+}
+
+.dropdown.open .arrow {
+  transform: rotate(90deg);
+}
+
+.dropdown-content {
+  display: none;
+  margin-left: 10px;
+}
+
+.dropdown.open .dropdown-content {
+  display: block;
+}
+
+.sub-link {
+  color: lightgreen;
+  display: block;
+  margin: 8px 0;
+  transition: 0.2s ease;
+}
+
+.sub-link:hover {
+  transform: translateX(5px);
+  text-shadow: 0 0 10px rgba(144,255,144,0.6);
+}
+
+/* HEADER */
+header {
+  text-align: center;
+  font-size: 20px;
+  color: gold;
+  text-shadow: 0 0 15px gold;
+  margin-top: 20px;
+}
+
+/* LAYOUT */
+.container {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 40px;
+}
+
+.card {
+  width: 90%;
+  padding: 14px;
+  border: 1px solid gold;
+  border-radius: 10px;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+/* MENU BUTTON (FIXED - same as other pages) */
+.menu-btn {
+  position: fixed;
+  top: 15px;
+  left: 15px;
+  z-index: 1100;
+  width: 45px;
+  height: 40px;
+  background: #111;
+  border: 2px solid gold;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+}
+
+.menu-btn div {
+  width: 22px;
+  height: 2px;
+  background: gold;
+}
+
+.menu-btn.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+</style>
 </head>
 
 <body>
 
 <div id="menu" class="menu">
+
 <a class="main-link" href="index.html">Home</a>
-<a class="main-link" href="main.html">Main Page</a>
-<a class="sub-link" href="template.html">Templates</a>
-<a class="sub-link" href="gallery.html">Gallery</a>
-<a class="sub-link" href="custom.html">Custom</a>
-<a class="sub-link" href="reviews.html">Reviews</a>
-<a class="sub-link" href="cart.html">Cart</a>
-<a class="sub-link" href="about.html">About</a>
+
+<div id="dropdown" class="dropdown">
+
+  <div class="dropdown-header" onclick="toggleDropdown()">
+    <span>Main Page</span>
+    <span class="arrow">▶</span>
+  </div>
+
+  <div class="dropdown-content">
+    <a class="sub-link" href="template.html">Templates</a>
+    <a class="sub-link" href="gallery.html">Gallery</a>
+    <a class="sub-link" href="custom.html">Custom</a>
+    <a class="sub-link" href="reviews.html">Reviews</a>
+    <a class="sub-link" href="cart.html">Cart</a>
+    <a class="sub-link" href="about.html">About</a>
+  </div>
+
 </div>
 
-<button onclick="toggleMenu()">☰</button>
+</div>
+
+<!-- FIXED MENU BUTTON -->
+<div id="menuBtn" class="menu-btn" onclick="toggleMenu()">
+  <div></div>
+  <div></div>
+  <div></div>
+</div>
 
 <header>Template (30 EGP)</header>
 
@@ -61,5 +230,12 @@ Add To Cart
 </div>
 
 <script src="script.js"></script>
+
+<script>
+function toggleDropdown() {
+  document.getElementById("dropdown").classList.toggle("open");
+}
+</script>
+
 </body>
 </html>
