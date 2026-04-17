@@ -41,7 +41,6 @@ header {
   box-sizing: border-box;
 }
 
-/* FIX OVERFLOW */
 input, textarea, select {
   width: 100%;
   padding: 12px;
@@ -57,7 +56,6 @@ textarea {
   resize: none;
 }
 
-/* BUTTON */
 button {
   background: gold;
   border: none;
@@ -78,7 +76,7 @@ button {
   padding: 15px;
 }
 
-/* ================= MENU (RESTORED LIKE OTHER PAGES) ================= */
+/* ================= MENU ================= */
 
 .menu {
   position: fixed;
@@ -123,6 +121,7 @@ button {
   transition: transform 0.3s ease;
 }
 
+/* FIX: only ONE arrow system */
 .dropdown.open .arrow {
   transform: rotate(90deg);
 }
@@ -186,8 +185,9 @@ button {
 
   <div id="dropdown" class="dropdown">
 
+    <!-- FIXED: ONLY ONE ARROW -->
     <div class="dropdown-header" onclick="toggleDropdown()">
-      <span>Main Page ▼</span>
+      <span>Main Page</span>
       <span class="arrow">▶</span>
     </div>
 
