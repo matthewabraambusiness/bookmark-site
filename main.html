@@ -44,11 +44,17 @@ html, body {
   transition: 0.2s ease;
 }
 
-/* HOVER POP EFFECT */
+/* HOVER POP + GLOW */
 .menu a:hover,
 .link-grid a:hover {
   transform: translateY(-4px);
   text-shadow: 0 0 15px rgba(255,215,0,0.6);
+}
+
+/* FIX MENU CLICK AREA */
+.menu a,
+.dropdown-header {
+  cursor: pointer;
 }
 
 .main-link {
@@ -66,6 +72,11 @@ html, body {
   font-weight: bold;
   cursor: pointer;
   margin: 10px 0;
+}
+
+/* MAKE MAIN PAGE CLICKABLE */
+.dropdown-header span:first-child {
+  cursor: pointer;
 }
 
 /* arrow */
@@ -127,6 +138,7 @@ header {
   transition: 0.25s ease;
 }
 
+/* BACK GLOW POP */
 .card:hover {
   transform: translateY(-6px);
   box-shadow: 0 10px 25px rgba(255, 215, 0, 0.25);
@@ -191,9 +203,9 @@ header {
 
 <div id="dropdown" class="dropdown">
 
-  <!-- FIXED: CLICK WORKS NOW -->
-  <div class="dropdown-header" onclick="toggleDropdown()">
-    <span>Main Page</span>
+  <!-- FIX: MAIN PAGE NOW WORKS -->
+  <div class="dropdown-header">
+    <span onclick="location.href='main.html'">Main Page</span>
     <span class="arrow">▶</span>
   </div>
 
@@ -250,6 +262,17 @@ function toggleMenu() {
 function toggleDropdown() {
   document.getElementById("dropdown").classList.toggle("open");
 }
+
+/* CLOSE MENU WHEN CLICKING OUTSIDE */
+document.addEventListener("click", function(event) {
+  const menu = document.getElementById("menu");
+  const btn = document.getElementById("menuBtn");
+
+  if (!menu.contains(event.target) && !btn.contains(event.target)) {
+    menu.classList.remove("open");
+    btn.classList.remove("hidden");
+  }
+});
 
 </script>
 
