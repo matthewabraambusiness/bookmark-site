@@ -1,7 +1,10 @@
-<body>
-
+<!DOCTYPE html>
+<html>
 <head>
 <title>Matthew's Bookmarks</title>
+
+<!-- MOBILE FIX -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
 
@@ -10,6 +13,7 @@ body {
   font-family: Arial, sans-serif;
   background: radial-gradient(circle at top, #111, #000);
   color: white;
+  -webkit-text-size-adjust: 100%;
 }
 
 /* INTRO */
@@ -107,8 +111,34 @@ header {
   }
 }
 
+/* MOBILE FIX */
+@media (max-width: 768px) {
+  header {
+    font-size: 28px;
+  }
+
+  .logo {
+    font-size: 28px;
+  }
+
+  .container {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .card {
+    width: 90%;
+  }
+
+  button {
+    width: 100%;
+  }
+}
+
 </style>
 </head>
+
+<body>
 
 <div id="intro">
   <div class="logo">Matthew's Bookmarks</div>
@@ -144,4 +174,6 @@ function toggleMenu() {
   document.getElementById("menu").classList.toggle("open");
 }
 </script>
+
 </body>
+</html>
