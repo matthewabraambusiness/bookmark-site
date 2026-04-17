@@ -63,7 +63,8 @@ button {
   font-size: 16px;
 }
 
-/* CARD + POP EFFECT FIXED */
+/* ================= CARD (RESTORED TEMPLATE POP EFFECT) ================= */
+
 .card {
   width: 90%;
   max-width: 600px;
@@ -75,14 +76,15 @@ button {
   box-sizing: border-box;
 
   transition: transform 0.25s ease, box-shadow 0.25s ease;
+  position: relative;
 }
 
 .card:hover {
-  transform: translateY(-6px);
-  box-shadow: 0 10px 25px rgba(255, 215, 0, 0.25);
+  transform: translateY(-8px) scale(1.01);
+  box-shadow: 0 12px 30px rgba(255, 215, 0, 0.25);
 }
 
-/* reply fix */
+/* reply system */
 .reply-box {
   display: flex;
   flex-direction: column;
@@ -96,7 +98,8 @@ button {
   box-sizing: border-box;
 }
 
-/* MENU */
+/* ================= MENU ================= */
+
 .menu {
   position: fixed;
   left: 0;
@@ -125,24 +128,26 @@ button {
   font-weight: bold;
 }
 
-/* FIXED MENU HEADER */
+/* FIXED DROPDOWN ALIGNMENT (arrow next to text properly) */
+
 .dropdown-header {
   display: flex;
   align-items: center;
   justify-content: flex-start;
-  gap: 8px;
+  gap: 6px;
   color: gold;
   font-weight: bold;
   cursor: pointer;
   margin: 10px 0;
 }
 
+/* make whole header clickable */
 .dropdown-header a {
   color: gold;
   text-decoration: none;
 }
 
-/* arrow close to text */
+/* arrow animation */
 .arrow {
   transition: transform 0.3s ease;
 }
@@ -151,6 +156,7 @@ button {
   transform: rotate(90deg);
 }
 
+/* dropdown items */
 .dropdown-content {
   display: none;
   margin-left: 10px;
@@ -203,6 +209,7 @@ button {
 
 <header>Reviews</header>
 
+<!-- MENU -->
 <div id="menu" class="menu">
 
   <a class="main-link" href="index.html">Home</a>
@@ -231,6 +238,7 @@ button {
   <div></div><div></div><div></div>
 </div>
 
+<!-- FORM -->
 <div class="form-box">
   <input id="name" placeholder="Your Name">
   <select id="stars">
@@ -248,6 +256,7 @@ button {
 
 <script>
 
+/* MENU */
 function toggleMenu() {
   document.getElementById("menu").classList.toggle("open");
   document.getElementById("menuBtn").classList.toggle("hidden");
@@ -322,7 +331,41 @@ async function addReview(){
   loadReviews();
 }
 
-/* REST */
+/* LIKE / DISLIKE / DELETE */
+async function like(i){
+  let data = await (await fetch(DB_URL)).json();
+  data[i].likes++;
+  await fetch(DB_URL,{method:"PUT",headers:{"Content-Type":"application/json"},body:JSON.stringify(data)});
+  loadReviews();
+}
+
+async function dislike(i){
+  let data = await (await fetch(DB_URL)).json();
+  data[i].dislikes++;
+  await fetch(DB_URL,{method:"PUT",headers:{"Content-Type":"application/json"},body:JSON.stringify(data)});
+  loadReviews();
+}
+
+async function deleteReview(i){
+  let data = await (await fetch(DB_URL)).json();
+  data.splice(i,1);
+  await fetch(DB_URL,{method:"PUT",headers:{"Content-Type":"application/json"},body:JSON.stringify(data)});
+  loadReviews();
+}
+
+/* REPLY */
+async function reply(i){
+  let input = document.getElementById("reply-"+i);
+  if(!input.value.trim()) return;
+
+  let data = await (await fetch(DB_URL)).json();
+  data[i].replies.push(input.value);
+
+  await fetch(DB_URL,{method:"PUT",headers:{"Content-Type":"application/json"},body:JSON.stringify(data)});
+  loadReviews();
+}
+
+/* RENDER */
 function render(reviews){
   list.innerHTML = "";
 
