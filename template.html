@@ -1,1 +1,288 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Template</title>
+<link rel="stylesheet" href="style.css">
 
+<style>
+
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  min-height: 100%;
+  overflow-x: hidden;
+  background: radial-gradient(circle at top, #111, #000);
+  font-family: Arial, sans-serif;
+  color: white;
+  -webkit-text-size-adjust: 100%;
+}
+
+/* MENU */
+.menu {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 220px;
+  height: 100%;
+  background: #111;
+  padding: 20px;
+  transform: translateX(-100%);
+  transition: transform 0.3s ease;
+  z-index: 1000;
+}
+
+.menu.open {
+  transform: translateX(0);
+}
+
+.menu a {
+  display: block;
+  margin: 10px 0;
+  text-decoration: none;
+  transition: 0.2s ease;
+}
+
+/* HOVER POP + GLOW */
+.menu a:hover {
+  transform: translateY(-4px);
+  text-shadow: 0 0 15px rgba(255,215,0,0.6);
+}
+
+.main-link {
+  color: gold;
+  font-weight: bold;
+}
+
+/* DROPDOWN */
+.dropdown-header {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 6px;
+  color: gold;
+  font-weight: bold;
+  cursor: pointer;
+  margin: 10px 0;
+}
+
+.arrow {
+  transition: transform 0.3s ease;
+  margin-left: 4px;
+}
+
+.dropdown.open .arrow {
+  transform: rotate(90deg);
+}
+
+.dropdown-content {
+  display: none;
+  margin-left: 10px;
+}
+
+.dropdown.open .dropdown-content {
+  display: block;
+}
+
+.sub-link {
+  color: lightgreen;
+  display: block;
+  margin: 8px 0;
+  transition: 0.2s ease;
+}
+
+.sub-link:hover {
+  transform: translateX(5px);
+  text-shadow: 0 0 10px rgba(144,255,144,0.6);
+}
+
+/* HEADER */
+header {
+  text-align: center;
+  font-size: 20px;
+  color: gold;
+  text-shadow: 0 0 15px gold;
+  margin-top: 20px;
+}
+
+/* LAYOUT */
+.container {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 40px;
+}
+
+.card {
+  width: 90%;
+  padding: 14px;
+  border: 1px solid gold;
+  border-radius: 10px;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+/* MENU BUTTON */
+.menu-btn {
+  position: fixed;
+  top: 15px;
+  left: 15px;
+  z-index: 1100;
+  width: 45px;
+  height: 40px;
+  background: #111;
+  border: 2px solid gold;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+}
+
+.menu-btn div {
+  width: 22px;
+  height: 2px;
+  background: gold;
+}
+
+.menu-btn.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* ========================= */
+/* FINAL MOBILE FIX (ONLY ADD) */
+/* ========================= */
+
+@media (max-width: 768px) {
+
+  header {
+    font-size: 32px;
+  }
+
+  .card {
+    width: 95%;
+    padding: 22px;
+  }
+
+  input {
+    font-size: 20px;
+    padding: 14px;
+  }
+
+  button {
+    font-size: 20px;
+    padding: 14px 18px;
+  }
+
+  .menu a {
+    font-size: 20px;
+  }
+
+}
+
+</style>
+</head>
+
+<body>
+
+<div id="menu" class="menu">
+
+<a class="main-link" href="index.html">Home</a>
+
+<div id="dropdown" class="dropdown">
+
+  <div class="dropdown-header" onclick="toggleDropdown()">
+    <span onclick="event.stopPropagation(); location.href='main.html'">Main Page</span>
+    <span class="arrow">▶</span>
+  </div>
+
+  <div class="dropdown-content">
+    <a class="sub-link" href="template.html">Templates</a>
+    <a class="sub-link" href="gallery.html">Gallery</a>
+    <a class="sub-link" href="custom.html">Custom</a>
+    <a class="sub-link" href="reviews.html">Reviews</a>
+    <a class="sub-link" href="cart.html">Cart</a>
+    <a class="sub-link" href="about.html">About</a>
+  </div>
+
+</div>
+
+</div>
+
+<div id="menuBtn" class="menu-btn" onclick="toggleMenu()">
+  <div></div>
+  <div></div>
+  <div></div>
+</div>
+
+<header>Template (30 EGP)</header>
+
+<div class="container">
+
+<div class="card flex">
+  <div>
+    <p>Front</p>
+    <img src="images/bookmark1.jpeg">
+  </div>
+  <div>
+    <p>Back</p>
+    <img src="images/bookmark2.jpeg">
+  </div>
+</div>
+
+<div class="card">
+<input id="a1" placeholder="Character">
+<input id="a2" placeholder="A Quote or Random">
+<input id="a3" placeholder="Movie/Show/Book">
+<input id="a4" placeholder="Front Color">
+<input id="a5" placeholder="Name On The Back">
+<input id="a6" placeholder="Back Color Gradient">
+
+<button onclick="
+if(validate([a1,a2,a3,a4,a5,a6])){
+addToCart(`Template:
+${a1.value}
+${a2.value}
+${a3.value}
+${a4.value}
+${a5.value}
+${a6.value}`)
+}">
+Add To Cart
+</button>
+
+</div>
+
+</div>
+
+<script src="script.js"></script>
+
+<script>
+
+function toggleMenu() {
+  document.getElementById("menu").classList.toggle("open");
+  document.getElementById("menuBtn").classList.toggle("hidden");
+}
+
+function toggleDropdown() {
+  document.getElementById("dropdown").classList.toggle("open");
+}
+
+document.addEventListener("click", function(event) {
+  const menu = document.getElementById("menu");
+  const btn = document.getElementById("menuBtn");
+
+  if (!menu.contains(event.target) && !btn.contains(event.target)) {
+    menu.classList.remove("open");
+    btn.classList.remove("hidden");
+  }
+});
+
+</script>
+
+</body>
+</html>
