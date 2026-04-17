@@ -63,7 +63,22 @@ button {
   font-size: 16px;
 }
 
-/* ===================== CARD FIX (POP + GLOW ADDED) ===================== */
+/* ===================== CARD ===================== */
+
+/* POP IN ANIMATION (THIS FIXES “BORING”) */
+@keyframes popIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.9) translateY(20px);
+  }
+  60% {
+    transform: scale(1.03) translateY(-4px);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
 
 .card {
   width: 90%;
@@ -75,18 +90,20 @@ button {
   padding: 15px;
   box-sizing: border-box;
 
+  animation: popIn 0.35s ease forwards;
   transition: all 0.25s ease;
   position: relative;
   overflow: hidden;
 }
 
-/* POP EFFECT */
+/* STRONGER HOVER POP */
 .card:hover {
-  transform: translateY(-8px) scale(1.01);
-  box-shadow: 0 0 15px gold, 0 15px 30px rgba(255, 215, 0, 0.25);
+  transform: translateY(-10px) scale(1.02);
+  box-shadow: 0 0 20px gold, 0 20px 40px rgba(255, 215, 0, 0.25);
+  border-color: #ffd700;
 }
 
-/* glowing moving aura like template */
+/* glow sweep effect */
 .card:hover::before {
   content: "";
   position: absolute;
@@ -112,13 +129,10 @@ button {
   margin-top: 10px;
 }
 
-.reply-box input {
-  width: 100%;
-  box-sizing: border-box;
-}
-
+.reply-box input,
 .reply-box button {
   width: 100%;
+  box-sizing: border-box;
 }
 
 /* MENU */
@@ -150,7 +164,6 @@ button {
   font-weight: bold;
 }
 
-/* dropdown */
 .dropdown-header {
   display: flex;
   align-items: center;
@@ -221,7 +234,6 @@ button {
 
 <header>Reviews</header>
 
-<!-- MENU -->
 <div id="menu" class="menu">
 
   <a class="main-link" href="index.html">Home</a>
@@ -229,7 +241,7 @@ button {
   <div id="dropdown" class="dropdown">
 
     <div class="dropdown-header" onclick="toggleDropdown()">
-      <a href="main.html">Main Page</a>
+      <a href="main.html" style="color:gold;text-decoration:none;">Main Page</a>
       <span class="arrow">▶</span>
     </div>
 
@@ -340,7 +352,7 @@ async function addReview(){
   loadReviews();
 }
 
-/* REST */
+/* RENDER */
 function render(reviews){
   list.innerHTML = "";
 
