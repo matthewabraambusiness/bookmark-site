@@ -45,7 +45,7 @@ html, body {
   margin-top: 10px;
 }
 
-/* FADE ANIMATION */
+/* FADE */
 @keyframes fadeOut {
   to {
     opacity: 0;
@@ -146,31 +146,40 @@ html, body {
   pointer-events: none;
 }
 
-/* HEADER */
-header {
-  text-align: center;
-  font-size: 26px;
-  color: gold;
-  text-shadow: 0 0 15px gold;
-  margin-top: 80px;
-}
-
-/* CENTER CONTENT */
+/* CENTER LAYOUT */
 .center {
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
-  height: 60vh;
+  height: 65vh;
+  gap: 25px;
 }
 
-/* BUTTON */
+/* BIG TITLE */
+.hero-title {
+  font-size: 42px;
+  color: gold;
+  text-shadow: 0 0 25px gold;
+  text-align: center;
+}
+
+/* DOUBLE OUTLINE BUTTON (RESTORED EFFECT) */
+.button-wrapper {
+  padding: 6px;
+  border: 2px solid gold;   /* outer outline */
+  border-radius: 14px;
+}
+
 button {
   background: gold;
-  border: none;
-  padding: 12px 20px;
-  border-radius: 8px;
+  border: 2px solid #b38f00; /* inner outline */
+  padding: 16px 30px;
+  border-radius: 10px;
   cursor: pointer;
-  font-size: 16px;
+  font-size: 18px;
+  font-weight: bold;
+  color: black;
 }
 
 </style>
@@ -217,12 +226,19 @@ button {
   <div></div>
 </div>
 
-<!-- HEADER -->
-<header>Matthew's Bookmarks</header>
-
-<!-- CENTER -->
+<!-- MAIN CENTER -->
 <div class="center">
-  <button onclick="location.href='main.html'">Start Shopping</button>
+
+  <div class="hero-title">
+    Matthew's Bookmarks
+  </div>
+
+  <div class="button-wrapper">
+    <button onclick="location.href='main.html'">
+      Start Shopping
+    </button>
+  </div>
+
 </div>
 
 <script>
@@ -238,15 +254,12 @@ function toggleDropdown() {
   document.getElementById("dropdown").classList.toggle("open");
 }
 
-/* OUTSIDE CLICK CLOSE (FIXED FOR MOBILE) */
+/* OUTSIDE CLICK CLOSE */
 document.addEventListener("click", function(event) {
   const menu = document.getElementById("menu");
   const btn = document.getElementById("menuBtn");
 
-  const insideMenu = menu.contains(event.target);
-  const insideBtn = btn.contains(event.target);
-
-  if (!insideMenu && !insideBtn) {
+  if (!menu.contains(event.target) && !btn.contains(event.target)) {
     menu.classList.remove("open");
     btn.classList.remove("hidden");
   }
