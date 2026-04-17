@@ -18,7 +18,6 @@ html, body {
   -webkit-text-size-adjust: 100%;
 }
 
-/* HEADER */
 header {
   text-align: center;
   font-size: 32px;
@@ -27,7 +26,6 @@ header {
   margin-top: 80px;
 }
 
-/* FORM */
 .form-box {
   width: 90%;
   max-width: 500px;
@@ -65,7 +63,6 @@ button {
   font-size: 16px;
 }
 
-/* CARD */
 .card {
   width: 90%;
   max-width: 600px;
@@ -76,8 +73,7 @@ button {
   padding: 15px;
 }
 
-/* ================= MENU ================= */
-
+/* MENU */
 .menu {
   position: fixed;
   left: 0;
@@ -106,11 +102,10 @@ button {
   font-weight: bold;
 }
 
-/* DROPDOWN FIXED POSITION */
 .dropdown-header {
   display: flex;
   align-items: center;
-  gap: 6px;          /* 👈 THIS brings arrow next to text */
+  gap: 6px;
   color: gold;
   font-weight: bold;
   cursor: pointer;
@@ -121,7 +116,6 @@ button {
   transition: transform 0.3s ease;
 }
 
-/* rotation stays same */
 .dropdown.open .arrow {
   transform: rotate(90deg);
 }
@@ -141,7 +135,6 @@ button {
   margin: 8px 0;
 }
 
-/* MENU BUTTON */
 .menu-btn {
   position: fixed;
   top: 15px;
@@ -204,16 +197,11 @@ button {
 
 </div>
 
-<!-- MENU BUTTON -->
 <div id="menuBtn" class="menu-btn" onclick="toggleMenu()">
-  <div></div>
-  <div></div>
-  <div></div>
+  <div></div><div></div><div></div>
 </div>
 
-<!-- FORM -->
 <div class="form-box">
-
   <input id="name" placeholder="Your Name">
   <select id="stars">
     <option value="5">★★★★★</option>
@@ -223,15 +211,14 @@ button {
     <option value="1">★</option>
   </select>
   <textarea id="text" placeholder="Write Review"></textarea>
-
   <button onclick="addReview()">Post Review</button>
-
 </div>
 
 <div id="list"></div>
 
 <script>
 
+/* MENU */
 function toggleMenu() {
   document.getElementById("menu").classList.toggle("open");
   document.getElementById("menuBtn").classList.toggle("hidden");
@@ -251,7 +238,7 @@ function toggleDropdown() {
   document.getElementById("dropdown").classList.toggle("open");
 }
 
-/* Firebase unchanged */
+/* FIREBASE */
 const DB_URL = "https://matthew-reviews-default-rtdb.firebaseio.com/reviews.json";
 const list = document.getElementById("list");
 
@@ -261,6 +248,7 @@ if(!deviceId){
   localStorage.setItem("deviceId", deviceId);
 }
 
+/* LOAD */
 async function loadReviews(){
   let res = await fetch(DB_URL);
   let data = await res.json();
@@ -268,6 +256,7 @@ async function loadReviews(){
   render(data);
 }
 
+/* ADD */
 async function addReview(){
   const name = document.getElementById("name");
   const text = document.getElementById("text");
@@ -278,8 +267,7 @@ async function addReview(){
     return;
   }
 
-  let res = await fetch(DB_URL);
-  let data = await res.json();
+  let data = await (await fetch(DB_URL)).json();
   if(!Array.isArray(data)) data = [];
 
   data.push({
@@ -305,12 +293,85 @@ async function addReview(){
   loadReviews();
 }
 
+/* LIKE */
+async function like(i){
+  let data = await (await fetch(DB_URL)).json();
+  data[i].likes++;
+  await fetch(DB_URL,{method:"PUT",headers:{"Content-Type":"application/json"},body:JSON.stringify(data)});
+  loadReviews();
+}
+
+/* DISLIKE */
+async function dislike(i){
+  let data = await (await fetch(DB_URL)).json();
+  data[i].dislikes++;
+  await fetch(DB_URL,{method:"PUT",headers:{"Content-Type":"application/json"},body:JSON.stringify(data)});
+  loadReviews();
+}
+
+/* REPLY */
+async function reply(i){
+  let input = document.getElementById("reply-"+i);
+  if(!input.value.trim()) return;
+
+  let data = await (await fetch(DB_URL)).json();
+  data[i].replies.push(input.value);
+
+  await fetch(DB_URL,{method:"PUT",headers:{"Content-Type":"application/json"},body:JSON.stringify(data)});
+  loadReviews();
+}
+
+/* DELETE + 5 MIN RULE */
+async function deleteReview(i){
+  let data = await (await fetch(DB_URL)).json();
+  const r = data[i];
+
+  if(r.deviceId !== deviceId){
+    alert("Not yours");
+    return;
+  }
+
+  if(Date.now() - r.createdAt > 5*60*1000){
+    alert("Too late");
+    return;
+  }
+
+  data.splice(i,1);
+
+  await fetch(DB_URL,{method:"PUT",headers:{"Content-Type":"application/json"},body:JSON.stringify(data)});
+  loadReviews();
+}
+
+/* RENDER (FULL RESTORED) */
 function render(reviews){
   list.innerHTML = "";
+
   reviews.forEach((r,i)=>{
+
+    let replies = "";
+    r.replies?.forEach(rep=>{
+      replies += `<p style="margin-left:15px; opacity:0.7;">↳ ${rep}</p>`;
+    });
+
     let div = document.createElement("div");
     div.className = "card";
-    div.innerHTML = `<b>${r.name}</b> ⭐${r.stars}<p>${r.text}</p>`;
+
+    div.innerHTML = `
+      <b>${r.name}</b> ⭐${r.stars}
+      <p>${r.text}</p>
+
+      <button onclick="like(${i})">👍 ${r.likes}</button>
+      <button onclick="dislike(${i})">👎 ${r.dislikes}</button>
+      <button onclick="deleteReview(${i})">🗑 Delete</button>
+
+      <br><br>
+
+      <input id="reply-${i}" placeholder="Reply...">
+      <button onclick="reply(${i})">Reply</button>
+
+      ${replies}
+    `;
+
     list.appendChild(div);
   });
 }
