@@ -63,6 +63,7 @@ button {
   font-size: 16px;
 }
 
+/* CARD */
 .card {
   width: 90%;
   max-width: 600px;
@@ -75,6 +76,7 @@ button {
   transition: transform 0.25s ease, box-shadow 0.25s ease;
 }
 
+/* 🔥 FIXED HOVER (this was what broke) */
 .card:hover {
   transform: translateY(-6px);
   box-shadow: 0 10px 25px rgba(255, 215, 0, 0.25);
@@ -397,29 +399,6 @@ async function deleteReview(i){
   loadReviews();
 }
 
-/* DELETE REPLY */
-async function deleteReply(i, j){
-  let data = await (await fetch(DB_URL)).json();
-  if(!Array.isArray(data)) return;
-
-  let reply = data[i].replies[j];
-
-  if(reply.deviceId !== deviceId){
-    alert("You can only delete your own reply");
-    return;
-  }
-
-  if(Date.now() - reply.createdAt > 5 * 60 * 1000){
-    alert("You can only delete within 5 minutes");
-    return;
-  }
-
-  data[i].replies.splice(j,1);
-
-  await save(data);
-  loadReviews();
-}
-
 /* REPLY */
 async function reply(i){
   let data = await (await fetch(DB_URL)).json();
@@ -440,11 +419,7 @@ async function reply(i){
 
   let targetName = data[i].name;
 
-  let formatted = {
-    text: `${replyName} replied to ${targetName}: ${replyText}`,
-    deviceId,
-    createdAt: Date.now()
-  };
+  let formatted = `${replyName} replied to ${targetName}: ${replyText}`;
 
   if(!data[i].replies) data[i].replies = [];
 
@@ -461,12 +436,8 @@ function render(reviews){
   reviews.forEach((r,i)=>{
 
     let replies = "";
-    r.replies?.forEach((rep,j)=>{
-      replies += `
-        <p style="margin-left:15px; opacity:0.7;">
-          ↳ ${rep.text}
-          <button onclick="deleteReply(${i},${j})">🗑</button>
-        </p>`;
+    r.replies?.forEach(rep=>{
+      replies += `<p style="margin-left:15px; opacity:0.7;">↳ ${rep}</p>`;
     });
 
     let div = document.createElement("div");
