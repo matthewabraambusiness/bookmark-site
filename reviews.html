@@ -133,7 +133,7 @@ button {
 .dropdown-header {
   display: flex;
   align-items: center;
-  justify-content: flex-start; /* FIXED */
+  justify-content: flex-start;
   gap: 6px;
   color: gold;
   font-weight: bold;
@@ -149,7 +149,7 @@ button {
 
 .arrow {
   transition: transform 0.3s ease;
-  margin-left: 6px; /* FIXED */
+  margin-left: 6px;
 }
 
 .dropdown.open .arrow {
@@ -177,7 +177,6 @@ button {
   text-shadow: 0 0 10px lightgreen;
 }
 
-/* MENU BUTTON */
 .menu-btn {
   position: fixed;
   top: 15px;
@@ -259,7 +258,11 @@ button {
 
 <script>
 
-function toggleMenu(){ document.getElementById("menu").classList.toggle("open"); document.getElementById("menuBtn").classList.toggle("hidden"); }
+/* MENU */
+function toggleMenu(){
+  document.getElementById("menu").classList.toggle("open");
+  document.getElementById("menuBtn").classList.toggle("hidden");
+}
 
 document.addEventListener("click",function(e){
   const menu=document.getElementById("menu");
@@ -274,6 +277,7 @@ function toggleDropdown(){
   document.getElementById("dropdown").classList.toggle("open");
 }
 
+/* FIREBASE */
 const DB_URL="https://matthew-reviews-default-rtdb.firebaseio.com/reviews.json";
 const list=document.getElementById("list");
 
@@ -283,6 +287,44 @@ if(!deviceId){
   localStorage.setItem("deviceId",deviceId);
 }
 
+/* ADD REVIEW (FIXED - THIS WAS MISSING) */
+async function addReview(){
+  const name=document.getElementById("name");
+  const text=document.getElementById("text");
+  const stars=document.getElementById("stars");
+
+  if(!name.value.trim() || !text.value.trim()){
+    alert("Please fill all fields");
+    return;
+  }
+
+  let data=await (await fetch(DB_URL)).json();
+  if(!Array.isArray(data)) data=[];
+
+  data.push({
+    id:crypto.randomUUID(),
+    deviceId,
+    name:name.value,
+    stars:stars.value,
+    text:text.value,
+    likes:0,
+    dislikes:0,
+    votes:{},
+    replies:[],
+    createdAt:Date.now()
+  });
+
+  await fetch(DB_URL,{
+    method:"PUT",
+    headers:{"Content-Type":"application/json"},
+    body:JSON.stringify(data)
+  });
+
+  name.value="";
+  text.value="";
+  loadReviews();
+}
+
 async function loadReviews(){
   let res=await fetch(DB_URL);
   let data=await res.json();
@@ -290,11 +332,18 @@ async function loadReviews(){
   render(data);
 }
 
-async function save(data){
-  await fetch(DB_URL,{
-    method:"PUT",
-    headers:{"Content-Type":"application/json"},
-    body:JSON.stringify(data)
+function render(reviews){
+  list.innerHTML="";
+  reviews.forEach((r,i)=>{
+    let div=document.createElement("div");
+    div.className="card";
+    div.innerHTML=`
+      <b>${r.name}</b> ⭐${r.stars}
+      <p>${r.text}</p>
+      <button>👍 ${r.likes}</button>
+      <button>👎 ${r.dislikes}</button>
+    `;
+    list.appendChild(div);
   });
 }
 
