@@ -63,7 +63,6 @@ button {
   font-size: 16px;
 }
 
-/* CARD + POP EFFECT FIXED */
 .card {
   width: 90%;
   max-width: 600px;
@@ -73,7 +72,6 @@ button {
   border-radius: 10px;
   padding: 15px;
   box-sizing: border-box;
-
   transition: transform 0.25s ease, box-shadow 0.25s ease;
 }
 
@@ -82,7 +80,6 @@ button {
   box-shadow: 0 10px 25px rgba(255, 215, 0, 0.25);
 }
 
-/* reply fix */
 .reply-box {
   display: flex;
   flex-direction: column;
@@ -125,11 +122,9 @@ button {
   font-weight: bold;
 }
 
-/* FIXED MENU HEADER */
 .dropdown-header {
   display: flex;
   align-items: center;
-  justify-content: flex-start;
   gap: 8px;
   color: gold;
   font-weight: bold;
@@ -142,7 +137,6 @@ button {
   text-decoration: none;
 }
 
-/* arrow close to text */
 .arrow {
   transition: transform 0.3s ease;
 }
@@ -311,18 +305,98 @@ async function addReview(){
     createdAt: Date.now()
   });
 
-  await fetch(DB_URL,{
-    method:"PUT",
-    headers:{"Content-Type":"application/json"},
-    body:JSON.stringify(data)
-  });
+  await save(data);
 
   name.value = "";
   text.value = "";
   loadReviews();
 }
 
-/* REST */
+/* SAVE */
+async function save(data){
+  await fetch(DB_URL,{
+    method:"PUT",
+    headers:{"Content-Type":"application/json"},
+    body:JSON.stringify(data)
+  });
+}
+
+/* LIKE */
+async function like(i){
+  let data = await (await fetch(DB_URL)).json();
+  if(!Array.isArray(data)) return;
+
+  data[i].likes = (data[i].likes || 0) + 1;
+
+  await save(data);
+  loadReviews();
+}
+
+/* DISLIKE */
+async function dislike(i){
+  let data = await (await fetch(DB_URL)).json();
+  if(!Array.isArray(data)) return;
+
+  data[i].dislikes = (data[i].dislikes || 0) + 1;
+
+  await save(data);
+  loadReviews();
+}
+
+/* DELETE */
+async function deleteReview(i){
+  let data = await (await fetch(DB_URL)).json();
+  if(!Array.isArray(data)) return;
+
+  let r = data[i];
+
+  if(r.deviceId !== deviceId){
+    alert("You can only delete your own review");
+    return;
+  }
+
+  if(Date.now() - r.createdAt > 5 * 60 * 1000){
+    alert("You can only delete within 5 minutes");
+    return;
+  }
+
+  data.splice(i,1);
+
+  await save(data);
+  loadReviews();
+}
+
+/* REPLY */
+async function reply(i){
+  let data = await (await fetch(DB_URL)).json();
+  if(!Array.isArray(data)) return;
+
+  let replyText = document.getElementById(`reply-${i}`).value;
+
+  if(!replyText.trim()){
+    alert("Write a reply");
+    return;
+  }
+
+  let replyName = prompt("Your name:");
+  if(!replyName || !replyName.trim()){
+    alert("Name required");
+    return;
+  }
+
+  let targetName = data[i].name;
+
+  let formatted = `${replyName} replied to ${targetName}: ${replyText}`;
+
+  if(!data[i].replies) data[i].replies = [];
+
+  data[i].replies.push(formatted);
+
+  await save(data);
+  loadReviews();
+}
+
+/* RENDER */
 function render(reviews){
   list.innerHTML = "";
 
