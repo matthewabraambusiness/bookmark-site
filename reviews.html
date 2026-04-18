@@ -129,18 +129,26 @@ button {
   font-weight: bold;
 }
 
-/* FIXED HOVER FOR DROPDOWN HEADER */
+/* ✅ FIX 1: dropdown header layout (arrow was dropping) */
+.dropdown-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  color: gold;
+  font-weight: bold;
+  cursor: pointer;
+  margin: 10px 0;
+}
+
+/* FIX 2: prevent link from breaking click toggle */
 .dropdown-header a {
   color: gold;
   text-decoration: none;
-  transition: transform 0.2s ease, text-shadow 0.2s ease;
+  flex: 1;
 }
 
-.dropdown-header a:hover {
-  transform: scale(1.05);
-  text-shadow: 0 0 10px gold;
-}
-
+/* FIX ARROW */
 .arrow {
   transition: transform 0.3s ease;
 }
@@ -158,7 +166,6 @@ button {
   display: block;
 }
 
-/* FIXED HOVER FOR SUB LINKS */
 .sub-link {
   color: lightgreen;
   display: block;
@@ -215,7 +222,7 @@ button {
   <div id="dropdown" class="dropdown">
 
     <div class="dropdown-header" onclick="toggleDropdown()">
-      <a href="main.html">Main Page</a>
+      <a href="main.html" onclick="event.preventDefault()">Main Page</a>
       <span class="arrow">▶</span>
     </div>
 
@@ -253,66 +260,6 @@ button {
 
 <script>
 
-/* EVERYTHING BELOW UNCHANGED */
-const DB_URL = "https://matthew-reviews-default-rtdb.firebaseio.com/reviews.json";
-const list = document.getElementById("list");
-
-let deviceId = localStorage.getItem("deviceId");
-if(!deviceId){
-  deviceId = crypto.randomUUID();
-  localStorage.setItem("deviceId", deviceId);
-}
-
-async function loadReviews(){
-  let res = await fetch(DB_URL);
-  let data = await res.json();
-  if(!Array.isArray(data)) data = [];
-  render(data);
-}
-
-async function save(data){
-  await fetch(DB_URL,{
-    method:"PUT",
-    headers:{"Content-Type":"application/json"},
-    body:JSON.stringify(data)
-  });
-}
-
-async function addReview(){
-  const name = document.getElementById("name");
-  const text = document.getElementById("text");
-  const stars = document.getElementById("stars");
-
-  if(!name.value.trim() || !text.value.trim()){
-    alert("Please fill all fields");
-    return;
-  }
-
-  let data = await (await fetch(DB_URL)).json();
-  if(!Array.isArray(data)) data = [];
-
-  data.push({
-    id: crypto.randomUUID(),
-    deviceId,
-    name: name.value,
-    stars: stars.value,
-    text: text.value,
-    likes: 0,
-    dislikes: 0,
-    votes: {},
-    replies: [],
-    createdAt: Date.now()
-  });
-
-  await save(data);
-
-  name.value = "";
-  text.value = "";
-  loadReviews();
-}
-
-/* LIKE / DISLIKE / DELETE / REPLY + RENDER (UNCHANGED) */
-
 function toggleMenu(){ document.getElementById("menu").classList.toggle("open"); document.getElementById("menuBtn").classList.toggle("hidden"); }
 
 document.addEventListener("click",function(e){
@@ -326,6 +273,30 @@ document.addEventListener("click",function(e){
 
 function toggleDropdown(){
   document.getElementById("dropdown").classList.toggle("open");
+}
+
+const DB_URL="https://matthew-reviews-default-rtdb.firebaseio.com/reviews.json";
+const list=document.getElementById("list");
+
+let deviceId=localStorage.getItem("deviceId");
+if(!deviceId){
+  deviceId=crypto.randomUUID();
+  localStorage.setItem("deviceId",deviceId);
+}
+
+async function loadReviews(){
+  let res=await fetch(DB_URL);
+  let data=await res.json();
+  if(!Array.isArray(data)) data=[];
+  render(data);
+}
+
+async function save(data){
+  await fetch(DB_URL,{
+    method:"PUT",
+    headers:{"Content-Type":"application/json"},
+    body:JSON.stringify(data)
+  });
 }
 
 loadReviews();
