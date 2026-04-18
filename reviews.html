@@ -129,28 +129,27 @@ button {
   font-weight: bold;
 }
 
-/* ✅ FIX 1: dropdown header layout (arrow was dropping) */
+/* DROPDOWN HEADER FIXED */
 .dropdown-header {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 8px;
+  justify-content: flex-start; /* FIXED */
+  gap: 6px;
   color: gold;
   font-weight: bold;
   cursor: pointer;
   margin: 10px 0;
 }
 
-/* FIX 2: prevent link from breaking click toggle */
 .dropdown-header a {
   color: gold;
   text-decoration: none;
-  flex: 1;
+  flex: unset;
 }
 
-/* FIX ARROW */
 .arrow {
   transition: transform 0.3s ease;
+  margin-left: 6px; /* FIXED */
 }
 
 .dropdown.open .arrow {
