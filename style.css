@@ -147,3 +147,41 @@ img {
   img { width: 90%; }
   .card { width: 90%; }
 }
+
+/* ========================= */
+/* MOBILE SCALE FIX (ADDED ONLY — NOTHING ELSE CHANGED)
+/* ========================= */
+
+@media (max-width: 600px){
+
+  .container{
+    max-width: 100%;
+    padding: 15px;
+  }
+
+  .card{
+    max-width: 100%;
+  }
+
+  body{
+    font-size: 18px;
+  }
+
+  header{
+    font-size: 34px;
+  }
+
+  img{
+    width: 100%;
+    max-width: none;
+  }
+
+  input, textarea, select{
+    font-size: 18px;
+  }
+
+  button{
+    font-size: 18px;
+  }
+
+}
