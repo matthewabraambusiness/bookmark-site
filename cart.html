@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<!DOCTYPE html>
 <html>
 <head>
 <title>Cart</title>
@@ -129,17 +130,26 @@ button.whatsapp {
   cursor: pointer;
 }
 
-/* EMPTY TEXT */
+button.whatsapp.active {
+  background: #25d366;
+  color: white;
+}
+
 .empty {
   color: white;
   opacity: 0.7;
   margin-top: 20px;
 }
 
-/* GREEN BUTTON WHEN ACTIVE */
-button.whatsapp.active {
-  background: #25d366;
+/* 🆕 DELETE BUTTON STYLE */
+.del {
+  background: red;
   color: white;
+  border: none;
+  padding: 6px 10px;
+  margin-left: 10px;
+  border-radius: 6px;
+  cursor: pointer;
 }
 
 </style>
@@ -228,12 +238,24 @@ function loadCart(){
 
   cart.forEach((item, i)=>{
     let div = document.createElement("div");
-    div.innerHTML = "• " + item;
+
+    div.innerHTML = `
+      • ${item}
+      <button class="del" onclick="deleteItem(${i})">Delete</button>
+    `;
+
     list.appendChild(div);
   });
 }
 
-/* ASK NAME POPUP */
+/* 🆕 DELETE ITEM */
+function deleteItem(i){
+  cart.splice(i,1);
+  localStorage.setItem("cart", JSON.stringify(cart));
+  loadCart();
+}
+
+/* ASK NAME */
 function askName(){
   let name = prompt("Enter your name:");
   if(!name || !name.trim()) return;
@@ -241,8 +263,9 @@ function askName(){
   continueCheckout(name.trim());
 }
 
-/* CONTINUE */
+/* CONTINUE + AUTO CLEAR CART */
 function continueCheckout(name){
+
   let msg = "🛒 NEW ORDER\n\n";
   msg += "Name: " + name + "\n\n";
 
@@ -258,6 +281,11 @@ function continueCheckout(name){
   let url = "https://wa.me/201280389893?text=" + encodeURIComponent(msg);
 
   window.open(url, "_blank");
+
+  /* 🆕 CLEAR CART AFTER SENDING */
+  localStorage.removeItem("cart");
+  cart = [];
+  loadCart();
 }
 
 </script>
