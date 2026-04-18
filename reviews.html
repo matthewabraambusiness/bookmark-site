@@ -63,7 +63,6 @@ button {
   font-size: 16px;
 }
 
-/* CARD */
 .card {
   width: 90%;
   max-width: 600px;
@@ -116,12 +115,6 @@ button {
   display: block;
   margin: 10px 0;
   text-decoration: none;
-  transition: transform 0.2s ease, text-shadow 0.2s ease;
-}
-
-.menu a:hover {
-  transform: translateX(5px) scale(1.05);
-  text-shadow: 0 0 10px gold;
 }
 
 .main-link {
@@ -142,12 +135,6 @@ button {
 .dropdown-header a {
   color: gold;
   text-decoration: none;
-  transition: transform 0.2s ease, text-shadow 0.2s ease;
-}
-
-.dropdown-header a:hover {
-  transform: scale(1.05);
-  text-shadow: 0 0 10px gold;
 }
 
 .arrow {
@@ -171,14 +158,9 @@ button {
   color: lightgreen;
   display: block;
   margin: 8px 0;
-  transition: transform 0.2s ease, text-shadow 0.2s ease;
 }
 
-.sub-link:hover {
-  transform: translateX(5px) scale(1.05);
-  text-shadow: 0 0 10px lightgreen;
-}
-
+/* MENU BUTTON */
 .menu-btn {
   position: fixed;
   top: 15px;
@@ -307,7 +289,7 @@ async function save(data){
   });
 }
 
-/* ADD (FIXED) */
+/* ADD */
 async function addReview(){
   const name = document.getElementById("name");
   const text = document.getElementById("text");
@@ -338,6 +320,97 @@ async function addReview(){
 
   name.value = "";
   text.value = "";
+  loadReviews();
+}
+
+/* LIKE */
+async function like(i){
+  let data = await (await fetch(DB_URL)).json();
+  let r = data[i];
+  if(!r.votes) r.votes = {};
+
+  let current = r.votes[deviceId];
+
+  if(current === "like"){
+    r.likes = Math.max(0, (r.likes || 0) - 1);
+    delete r.votes[deviceId];
+  } else {
+    if(current === "dislike"){
+      r.dislikes = Math.max(0, (r.dislikes || 0) - 1);
+    }
+    r.likes = (r.likes || 0) + 1;
+    r.votes[deviceId] = "like";
+  }
+
+  await save(data);
+  loadReviews();
+}
+
+/* DISLIKE */
+async function dislike(i){
+  let data = await (await fetch(DB_URL)).json();
+  let r = data[i];
+  if(!r.votes) r.votes = {};
+
+  let current = r.votes[deviceId];
+
+  if(current === "dislike"){
+    r.dislikes = Math.max(0, (r.dislikes || 0) - 1);
+    delete r.votes[deviceId];
+  } else {
+    if(current === "like"){
+      r.likes = Math.max(0, (r.likes || 0) - 1);
+    }
+    r.dislikes = (r.dislikes || 0) + 1;
+    r.votes[deviceId] = "dislike";
+  }
+
+  await save(data);
+  loadReviews();
+}
+
+/* DELETE REVIEW */
+async function deleteReview(i){
+  let data = await (await fetch(DB_URL)).json();
+  let r = data[i];
+
+  if(r.deviceId !== deviceId){
+    alert("You can only delete your own review");
+    return;
+  }
+
+  if(Date.now() - r.createdAt > 5 * 60 * 1000){
+    alert("You can only delete within 5 minutes");
+    return;
+  }
+
+  data.splice(i,1);
+
+  await save(data);
+  loadReviews();
+}
+
+/* REPLY */
+async function reply(i){
+  let data = await (await fetch(DB_URL)).json();
+
+  let replyText = document.getElementById(`reply-${i}`).value;
+  if(!replyText.trim()){
+    alert("Write a reply");
+    return;
+  }
+
+  let replyName = prompt("Your name:");
+  if(!replyName || !replyName.trim()){
+    alert("Name required");
+    return;
+  }
+
+  if(!data[i].replies) data[i].replies = [];
+
+  data[i].replies.push(`${replyName} replied to ${data[i].name}: ${replyText}`);
+
+  await save(data);
   loadReviews();
 }
 
