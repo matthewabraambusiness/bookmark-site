@@ -301,6 +301,7 @@ async function addReview(){
     text: text.value,
     likes: 0,
     dislikes: 0,
+    votes: {},
     replies: [],
     createdAt: Date.now()
   });
@@ -326,7 +327,22 @@ async function like(i){
   let data = await (await fetch(DB_URL)).json();
   if(!Array.isArray(data)) return;
 
-  data[i].likes = (data[i].likes || 0) + 1;
+  let r = data[i];
+  if(!r.votes) r.votes = {};
+
+  let current = r.votes[deviceId];
+
+  if(current === "like"){
+    r.likes = Math.max(0, (r.likes || 0) - 1);
+    delete r.votes[deviceId];
+  } else {
+    if(current === "dislike"){
+      r.dislikes = Math.max(0, (r.dislikes || 0) - 1);
+    }
+
+    r.likes = (r.likes || 0) + 1;
+    r.votes[deviceId] = "like";
+  }
 
   await save(data);
   loadReviews();
@@ -337,13 +353,28 @@ async function dislike(i){
   let data = await (await fetch(DB_URL)).json();
   if(!Array.isArray(data)) return;
 
-  data[i].dislikes = (data[i].dislikes || 0) + 1;
+  let r = data[i];
+  if(!r.votes) r.votes = {};
+
+  let current = r.votes[deviceId];
+
+  if(current === "dislike"){
+    r.dislikes = Math.max(0, (r.dislikes || 0) - 1);
+    delete r.votes[deviceId];
+  } else {
+    if(current === "like"){
+      r.likes = Math.max(0, (r.likes || 0) - 1);
+    }
+
+    r.dislikes = (r.dislikes || 0) + 1;
+    r.votes[deviceId] = "dislike";
+  }
 
   await save(data);
   loadReviews();
 }
 
-/* DELETE */
+/* DELETE REVIEW */
 async function deleteReview(i){
   let data = await (await fetch(DB_URL)).json();
   if(!Array.isArray(data)) return;
@@ -361,6 +392,29 @@ async function deleteReview(i){
   }
 
   data.splice(i,1);
+
+  await save(data);
+  loadReviews();
+}
+
+/* DELETE REPLY */
+async function deleteReply(i, j){
+  let data = await (await fetch(DB_URL)).json();
+  if(!Array.isArray(data)) return;
+
+  let reply = data[i].replies[j];
+
+  if(reply.deviceId !== deviceId){
+    alert("You can only delete your own reply");
+    return;
+  }
+
+  if(Date.now() - reply.createdAt > 5 * 60 * 1000){
+    alert("You can only delete within 5 minutes");
+    return;
+  }
+
+  data[i].replies.splice(j,1);
 
   await save(data);
   loadReviews();
@@ -386,7 +440,11 @@ async function reply(i){
 
   let targetName = data[i].name;
 
-  let formatted = `${replyName} replied to ${targetName}: ${replyText}`;
+  let formatted = {
+    text: `${replyName} replied to ${targetName}: ${replyText}`,
+    deviceId,
+    createdAt: Date.now()
+  };
 
   if(!data[i].replies) data[i].replies = [];
 
@@ -403,8 +461,12 @@ function render(reviews){
   reviews.forEach((r,i)=>{
 
     let replies = "";
-    r.replies?.forEach(rep=>{
-      replies += `<p style="margin-left:15px; opacity:0.7;">↳ ${rep}</p>`;
+    r.replies?.forEach((rep,j)=>{
+      replies += `
+        <p style="margin-left:15px; opacity:0.7;">
+          ↳ ${rep.text}
+          <button onclick="deleteReply(${i},${j})">🗑</button>
+        </p>`;
     });
 
     let div = document.createElement("div");
