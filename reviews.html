@@ -129,7 +129,6 @@ button {
   font-weight: bold;
 }
 
-/* DROPDOWN HEADER FIXED */
 .dropdown-header {
   display: flex;
   align-items: center;
@@ -144,7 +143,6 @@ button {
 .dropdown-header a {
   color: gold;
   text-decoration: none;
-  flex: unset;
 }
 
 .arrow {
@@ -169,12 +167,6 @@ button {
   color: lightgreen;
   display: block;
   margin: 8px 0;
-  transition: transform 0.2s ease, text-shadow 0.2s ease;
-}
-
-.sub-link:hover {
-  transform: translateX(5px) scale(1.05);
-  text-shadow: 0 0 10px lightgreen;
 }
 
 .menu-btn {
@@ -258,7 +250,6 @@ button {
 
 <script>
 
-/* MENU */
 function toggleMenu(){
   document.getElementById("menu").classList.toggle("open");
   document.getElementById("menuBtn").classList.toggle("hidden");
@@ -277,7 +268,6 @@ function toggleDropdown(){
   document.getElementById("dropdown").classList.toggle("open");
 }
 
-/* FIREBASE */
 const DB_URL="https://matthew-reviews-default-rtdb.firebaseio.com/reviews.json";
 const list=document.getElementById("list");
 
@@ -287,7 +277,24 @@ if(!deviceId){
   localStorage.setItem("deviceId",deviceId);
 }
 
-/* ADD REVIEW (FIXED - THIS WAS MISSING) */
+/* SAVE */
+async function save(data){
+  await fetch(DB_URL,{
+    method:"PUT",
+    headers:{"Content-Type":"application/json"},
+    body:JSON.stringify(data)
+  });
+}
+
+/* LOAD */
+async function loadReviews(){
+  let res=await fetch(DB_URL);
+  let data=await res.json();
+  if(!Array.isArray(data)) data=[];
+  render(data);
+}
+
+/* ADD */
 async function addReview(){
   const name=document.getElementById("name");
   const text=document.getElementById("text");
@@ -314,35 +321,120 @@ async function addReview(){
     createdAt:Date.now()
   });
 
-  await fetch(DB_URL,{
-    method:"PUT",
-    headers:{"Content-Type":"application/json"},
-    body:JSON.stringify(data)
-  });
+  await save(data);
 
   name.value="";
   text.value="";
   loadReviews();
 }
 
-async function loadReviews(){
-  let res=await fetch(DB_URL);
-  let data=await res.json();
-  if(!Array.isArray(data)) data=[];
-  render(data);
+/* LIKE */
+async function like(i){
+  let data=await (await fetch(DB_URL)).json();
+  let r=data[i];
+
+  if(!r.votes) r.votes={};
+
+  let current=r.votes[deviceId];
+
+  if(current==="like"){
+    r.likes=Math.max(0,(r.likes||0)-1);
+    delete r.votes[deviceId];
+  } else {
+    if(current==="dislike") r.dislikes=Math.max(0,(r.dislikes||0)-1);
+    r.likes=(r.likes||0)+1;
+    r.votes[deviceId]="like";
+  }
+
+  await save(data);
+  loadReviews();
 }
 
+/* DISLIKE */
+async function dislike(i){
+  let data=await (await fetch(DB_URL)).json();
+  let r=data[i];
+
+  if(!r.votes) r.votes={};
+
+  let current=r.votes[deviceId];
+
+  if(current==="dislike"){
+    r.dislikes=Math.max(0,(r.dislikes||0)-1);
+    delete r.votes[deviceId];
+  } else {
+    if(current==="like") r.likes=Math.max(0,(r.likes||0)-1);
+    r.dislikes=(r.dislikes||0)+1;
+    r.votes[deviceId]="dislike";
+  }
+
+  await save(data);
+  loadReviews();
+}
+
+/* DELETE */
+async function deleteReview(i){
+  let data=await (await fetch(DB_URL)).json();
+  let r=data[i];
+
+  if(r.deviceId!==deviceId){
+    alert("Only your review");
+    return;
+  }
+
+  data.splice(i,1);
+  await save(data);
+  loadReviews();
+}
+
+/* REPLY */
+async function reply(i){
+  let data=await (await fetch(DB_URL)).json();
+
+  let txt=document.getElementById("reply-"+i).value;
+  if(!txt.trim()) return alert("Write reply");
+
+  let name=prompt("Your name:");
+  if(!name) return;
+
+  if(!data[i].replies) data[i].replies=[];
+
+  data[i].replies.push(name+" → "+txt);
+
+  await save(data);
+  loadReviews();
+}
+
+/* RENDER */
 function render(reviews){
   list.innerHTML="";
+
   reviews.forEach((r,i)=>{
+
+    let replies="";
+    r.replies?.forEach(rep=>{
+      replies+=`<p style="margin-left:15px;opacity:0.7">↳ ${rep}</p>`;
+    });
+
     let div=document.createElement("div");
     div.className="card";
+
     div.innerHTML=`
       <b>${r.name}</b> ⭐${r.stars}
       <p>${r.text}</p>
-      <button>👍 ${r.likes}</button>
-      <button>👎 ${r.dislikes}</button>
+
+      <button onclick="like(${i})">👍 ${r.likes}</button>
+      <button onclick="dislike(${i})">👎 ${r.dislikes}</button>
+      <button onclick="deleteReview(${i})">🗑</button>
+
+      <div class="reply-box">
+        <input id="reply-${i}" placeholder="Reply...">
+        <button onclick="reply(${i})">Reply</button>
+      </div>
+
+      ${replies}
     `;
+
     list.appendChild(div);
   });
 }
